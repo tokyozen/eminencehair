@@ -50,7 +50,7 @@ const Navigation = () => {
               </Link>
             ))}
             <Link
-              to="/contact"
+              to="/book"
               className="btn-primary"
             >
               Book Now
@@ -87,7 +87,7 @@ const Navigation = () => {
                 </Link>
               ))}
               <Link
-                to="/contact"
+                to="/book"
                 onClick={() => setIsOpen(false)}
                 className="block w-full text-center btn-primary mt-4"
               >

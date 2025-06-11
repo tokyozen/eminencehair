@@ -1,5 +1,6 @@
 import React from 'react';
 import { Clock, DollarSign, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Services = () => {
   const mainServices = [
@@ -270,12 +271,12 @@ const Services = () => {
                 Contact us today to discuss your hair transformation needs.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="btn-primary text-lg px-8 py-4 shadow-2xl">
+                <Link to="/book" className="btn-primary text-lg px-8 py-4 shadow-2xl">
                   Book Appointment
-                </button>
-                <button className="btn-secondary text-lg px-8 py-4 shadow-2xl">
+                </Link>
+                <Link to="/contact" className="btn-secondary text-lg px-8 py-4 shadow-2xl">
                   Ask Questions
-                </button>
+                </Link>
               </div>
             </div>
           </div>

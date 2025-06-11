@@ -99,9 +99,9 @@ const Home = () => {
             <Link to="/collection" className="btn-primary text-lg px-8 py-4 shadow-2xl">
               Shop Collection
             </Link>
-            <a href="#booking" className="btn-secondary text-lg px-8 py-4 shadow-2xl">
+            <Link to="/book" className="btn-secondary text-lg px-8 py-4 shadow-2xl">
               Book Appointment
-            </a>
+            </Link>
           </div>
         </div>
       </section>
