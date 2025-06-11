@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
 import Chatbot from './components/Chatbot';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Collection from './pages/Collection';
 import About from './pages/About';
@@ -25,6 +26,7 @@ function App() {
         </Routes>
         <Footer />
         <Chatbot />
+        <ScrollToTop />
       </div>
     </Router>
   );
