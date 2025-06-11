@@ -17,7 +17,7 @@ const Navigation = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="sticky top-0 z-50 bg-soft-black bg-opacity-95 backdrop-blur-md border-b border-gray-800">
+    <nav className="sticky top-0 z-50 bg-soft-black bg-opacity-20 backdrop-blur-md border-b border-white border-opacity-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -71,7 +71,7 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-gray-900 rounded-lg mt-2">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-soft-black bg-opacity-80 backdrop-blur-md rounded-lg mt-2 border border-white border-opacity-10">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
