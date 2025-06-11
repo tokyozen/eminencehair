@@ -7,13 +7,13 @@ const Contact = () => {
     {
       icon: <Phone className="w-6 h-6 text-muted-coral" />,
       title: "Phone",
-      details: ["(555) 123-4567"],
+      details: ["(204) 825-8526"],
       action: "Call now"
     },
     {
       icon: <Mail className="w-6 h-6 text-golden-yellow" />,
       title: "Email",
-      details: ["hello@eminencehair.com"],
+      details: ["eihu335@gmail.com"],
       action: "Send email"
     },
     {
