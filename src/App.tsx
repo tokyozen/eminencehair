@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
+import Chatbot from './components/Chatbot';
 import Home from './pages/Home';
 import Collection from './pages/Collection';
 import About from './pages/About';
@@ -23,6 +24,7 @@ function App() {
           <Route path="/book" element={<BookNow />} />
         </Routes>
         <Footer />
+        <Chatbot />
       </div>
     </Router>
   );
