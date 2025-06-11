@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Award, Users, Sparkles } from 'lucide-react';
+import { Heart, Award, Users, Sparkles, Quote, Crown, Star } from 'lucide-react';
 
 const About = () => {
   const stats = [
@@ -27,6 +27,29 @@ const About = () => {
     }
   ];
 
+  const achievements = [
+    {
+      icon: <Crown className="w-6 h-6 text-golden-yellow" />,
+      title: "Premium Quality Standards",
+      description: "Only the finest 100% human hair makes it into our collection"
+    },
+    {
+      icon: <Star className="w-6 h-6 text-muted-coral" />,
+      title: "Expert Customization",
+      description: "Every wig is professionally customized for the perfect fit"
+    },
+    {
+      icon: <Heart className="w-6 h-6 text-golden-yellow" />,
+      title: "Customer Satisfaction",
+      description: "Hundreds of happy clients trust us with their hair transformations"
+    },
+    {
+      icon: <Sparkles className="w-6 h-6 text-muted-coral" />,
+      title: "Ready-to-Wear Results",
+      description: "Fully styled and prepared wigs that are installation-ready"
+    }
+  ];
+
   return (
     <div className="animate-fade-in">
       {/* Hero Section with Parallax Background */}
@@ -51,7 +74,7 @@ const About = () => {
 
       <div className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          {/* Story Section with Background Image */}
+          {/* CEO Story Section with Dual Photos */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
               className="absolute inset-0 bg-cover bg-center"
@@ -62,34 +85,83 @@ const About = () => {
               <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
             </div>
             
-            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center p-12">
-              <div className="space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold text-warm-beige mb-6">
-                  Our Story
-                </h2>
-                <p className="text-gray-300 text-lg leading-relaxed">
-                  Eminence Hair Co. was born from a simple belief: everyone deserves to feel confident 
-                  and beautiful in their own skin. We specialize in high-quality wigs and bundles that 
-                  look natural and feel incredibly soft.
-                </p>
-                <p className="text-gray-300 text-lg leading-relaxed">
-                  What sets us apart is our commitment to customization. We don't just sell wigs – we 
-                  create personalized hair solutions. Every piece goes through our meticulous customization 
-                  process, including bleaching, plucking, and styling, so your wig is ready to wear the 
-                  moment you put it on.
-                </p>
-                <p className="text-gray-300 text-lg leading-relaxed">
-                  Whether you're looking for an everyday natural look or something extra special, 
-                  Eminence Hair Co. is here to help you transform your look and boost your confidence.
-                </p>
-              </div>
-              <div className="relative group">
-                <div className="aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-muted-coral/20 to-golden-yellow/20 p-8 flex items-center justify-center">
-                  <img
-                    src="https://eminenceextensions.com/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg"
-                    alt="Premium Hair Collection"
-                    className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
-                  />
+            <div className="relative z-10 p-12">
+              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                <div className="space-y-6">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <Quote className="w-8 h-8 text-muted-coral" />
+                    <h2 className="text-3xl md:text-4xl font-bold text-warm-beige">
+                      Meet Our Founder
+                    </h2>
+                  </div>
+                  
+                  <blockquote className="text-xl text-gray-300 leading-relaxed italic border-l-4 border-muted-coral pl-6 mb-6">
+                    "I started Eminence Hair Co. because I believe every woman deserves to feel beautiful and confident. 
+                    Hair is more than just an accessory – it's an expression of who you are."
+                  </blockquote>
+                  
+                  <p className="text-gray-300 text-lg leading-relaxed">
+                    What began as a passion for helping women feel their best has grown into a business built on 
+                    quality, craftsmanship, and genuine care. I personally oversee every customization to ensure 
+                    each wig meets our high standards.
+                  </p>
+                  
+                  <p className="text-gray-300 text-lg leading-relaxed">
+                    When you choose Eminence Hair Co., you're not just getting a wig – you're getting a piece 
+                    that's been crafted with love, attention to detail, and the goal of making you feel absolutely amazing.
+                  </p>
+
+                  {/* Achievement Highlights */}
+                  <div className="grid md:grid-cols-2 gap-4 mt-8">
+                    {achievements.map((achievement, index) => (
+                      <div key={index} className="flex items-start space-x-3 p-4 bg-gray-800 bg-opacity-50 rounded-lg">
+                        <div className="flex-shrink-0 p-2 bg-golden-yellow bg-opacity-20 rounded-lg">
+                          {achievement.icon}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-warm-beige text-sm mb-1">{achievement.title}</h4>
+                          <p className="text-gray-300 text-xs">{achievement.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* CEO Photos - Creative Collage Style */}
+                <div className="relative">
+                  <div className="relative group">
+                    {/* Main Photo */}
+                    <div className="relative z-10 w-80 h-96 mx-auto rounded-2xl overflow-hidden shadow-2xl transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
+                      <img
+                        src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
+                        alt="CEO of Eminence Hair Co."
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-soft-black/20 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    {/* Secondary Photo - Overlapping */}
+                    <div className="absolute top-8 -right-8 w-48 h-64 rounded-xl overflow-hidden shadow-xl transform rotate-6 group-hover:rotate-3 transition-transform duration-500 border-4 border-white border-opacity-20">
+                      <img
+                        src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.57.jpeg"
+                        alt="CEO working on hair customization"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-muted-coral/20 via-transparent to-transparent"></div>
+                    </div>
+                    
+                    {/* Decorative Elements */}
+                    <div className="absolute -top-6 -left-6 w-12 h-12 bg-gradient-to-br from-golden-yellow to-muted-coral rounded-full opacity-80 animate-pulse-slow"></div>
+                    <div className="absolute -bottom-4 left-8 w-8 h-8 bg-muted-coral rounded-full opacity-60"></div>
+                    <div className="absolute top-1/3 -left-4 w-6 h-6 bg-golden-yellow rounded-full opacity-40"></div>
+                    <div className="absolute bottom-1/4 -right-12 w-10 h-10 bg-gradient-to-br from-muted-coral to-burnt-orange rounded-full opacity-70"></div>
+                    
+                    {/* Floating Text Badge */}
+                    <div className="absolute bottom-4 left-4 bg-soft-black bg-opacity-80 backdrop-blur-sm rounded-lg p-3 border border-muted-coral border-opacity-30">
+                      <p className="text-muted-coral font-semibold text-sm">Founder & CEO</p>
+                      <p className="text-gray-300 text-xs">Eminence Hair Co.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

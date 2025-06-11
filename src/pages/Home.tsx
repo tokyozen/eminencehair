@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Crown, Heart, Star, Mail, Gift, Scissors, Clock, DollarSign } from 'lucide-react';
+import { Sparkles, Crown, Heart, Star, Mail, Gift, Scissors, Clock, DollarSign, Quote } from 'lucide-react';
 import BookingForm from '../components/BookingForm';
 
 const Home = () => {
@@ -102,6 +102,73 @@ const Home = () => {
             <a href="#booking" className="btn-secondary text-lg px-8 py-4 shadow-2xl">
               Book Appointment
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* CEO Introduction Section - Creative Floating Design */}
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative">
+            {/* Floating CEO Photo with Elegant Frame */}
+            <div className="absolute top-0 right-0 lg:right-20 z-10 hidden lg:block">
+              <div className="relative group">
+                <div className="w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                  <img
+                    src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
+                    alt="CEO of Eminence Hair Co."
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-soft-black/30 via-transparent to-transparent"></div>
+                </div>
+                {/* Decorative Elements */}
+                <div className="absolute -top-4 -left-4 w-8 h-8 bg-golden-yellow rounded-full opacity-80"></div>
+                <div className="absolute -bottom-4 -right-4 w-6 h-6 bg-muted-coral rounded-full opacity-60"></div>
+                <div className="absolute top-1/2 -left-8 w-4 h-4 bg-golden-yellow rounded-full opacity-40"></div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="lg:pr-96">
+              <div className="card bg-gradient-to-br from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm border-2 border-white border-opacity-10">
+                <div className="flex items-start space-x-4 mb-6">
+                  <Quote className="w-8 h-8 text-muted-coral flex-shrink-0 mt-2" />
+                  <div>
+                    <blockquote className="text-xl md:text-2xl text-warm-beige font-medium leading-relaxed mb-4">
+                      "Every woman deserves to feel beautiful and confident. That's why I pour my heart into every wig I customize, ensuring each piece is perfect for the woman who will wear it."
+                    </blockquote>
+                    <div className="flex items-center space-x-4">
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-muted-coral lg:hidden">
+                        <img
+                          src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
+                          alt="CEO of Eminence Hair Co."
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-muted-coral font-semibold text-lg">Founder & CEO</p>
+                        <p className="text-gray-300">Eminence Hair Co.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid md:grid-cols-3 gap-6 mt-8">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-muted-coral mb-1">500+</div>
+                    <div className="text-gray-300 text-sm">Happy Clients</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-golden-yellow mb-1">3+</div>
+                    <div className="text-gray-300 text-sm">Years Experience</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-muted-coral mb-1">100%</div>
+                    <div className="text-gray-300 text-sm">Satisfaction</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
