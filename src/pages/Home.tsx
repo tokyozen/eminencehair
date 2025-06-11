@@ -87,7 +87,7 @@ const Home = () => {
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="floating-animation">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-muted-coral via-golden-yellow to-muted-coral bg-clip-text text-transparent animate-slide-up text-shadow">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-warm-beige animate-slide-up">
               Eminence Hair Co.
             </h1>
           </div>
