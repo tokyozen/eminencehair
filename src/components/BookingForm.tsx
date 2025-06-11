@@ -56,18 +56,18 @@ const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   return (
-    <section className="py-16 px-4">
+    <section className="py-12 sm:py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 sm:mb-12">
           <h2 className="section-title">{title}</h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
             {subtitle}
           </p>
         </div>
 
         <div className="card max-w-2xl mx-auto animate-fade-in">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <label className="block text-sm font-medium mb-2 text-warm-beige">
                   <User className="inline w-4 h-4 mr-2" />
@@ -96,7 +96,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                   onChange={handleChange}
                   required
                   className="input-field"
-                  placeholder="(555) 123-4567"
+                  placeholder="(204) 825-8526"
                 />
               </div>
             </div>
@@ -135,7 +135,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               </select>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <label className="block text-sm font-medium mb-2 text-warm-beige">
                   <Calendar className="inline w-4 h-4 mr-2" />
@@ -188,14 +188,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
             <button
               type="submit"
-              className="w-full btn-primary text-lg py-4"
+              className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
             >
               Submit Booking Request
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-golden-yellow bg-opacity-10 rounded-lg border border-golden-yellow border-opacity-30">
-            <p className="text-sm text-golden-yellow font-medium">
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-golden-yellow bg-opacity-10 rounded-lg border border-golden-yellow border-opacity-30">
+            <p className="text-xs sm:text-sm text-golden-yellow font-medium">
               <strong>Important:</strong> Please read our booking policies before submitting. 
               We require 24-hour advance notice for rescheduling and have specific requirements for wig drop-offs.
             </p>

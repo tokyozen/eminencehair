@@ -12,23 +12,23 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-muted-coral hover:bg-burnt-orange text-warm-beige font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+    @apply bg-muted-coral hover:bg-burnt-orange text-warm-beige font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base;
   }
   
   .btn-secondary {
-    @apply bg-golden-yellow hover:bg-burnt-orange text-soft-black font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+    @apply bg-golden-yellow hover:bg-burnt-orange text-soft-black font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base;
   }
   
   .card {
-    @apply bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-xl p-6 shadow-xl border border-gray-700 hover:border-muted-coral transition-all duration-300;
+    @apply bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-xl border border-gray-700 hover:border-muted-coral transition-all duration-300;
   }
   
   .input-field {
-    @apply w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-warm-beige placeholder-gray-400 focus:border-muted-coral focus:ring-2 focus:ring-muted-coral focus:ring-opacity-20 outline-none transition-all duration-300;
+    @apply w-full px-3 py-2 sm:px-4 sm:py-3 bg-gray-800 border border-gray-600 rounded-lg text-warm-beige placeholder-gray-400 focus:border-muted-coral focus:ring-2 focus:ring-muted-coral focus:ring-opacity-20 outline-none transition-all duration-300 text-sm sm:text-base;
   }
   
   .section-title {
-    @apply text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-muted-coral to-golden-yellow bg-clip-text text-transparent;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12 lg:mb-16 bg-gradient-to-r from-muted-coral to-golden-yellow bg-clip-text text-transparent px-4;
   }
 }
 
@@ -67,4 +67,48 @@
 
 .animate-slide-up {
   animation: slideUp 0.6s ease-out;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  .floating-animation {
+    animation: none; /* Disable floating on mobile for better performance */
+  }
+  
+  .hero-gradient {
+    background: linear-gradient(180deg, #1C1C1C 0%, #2A2A2A 50%, #1C1C1C 100%);
+  }
+}
+
+/* Ensure text is readable on all backgrounds */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive grid improvements */
+.responsive-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid {
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid {
+    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-grid {
+    gap: 2.5rem;
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

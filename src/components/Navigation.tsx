@@ -19,28 +19,28 @@ const Navigation = () => {
   return (
     <nav className="sticky top-0 z-50 bg-soft-black bg-opacity-20 backdrop-blur-md border-b border-white border-opacity-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14 sm:h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="h-10 w-10 overflow-hidden rounded-full bg-white p-1 group-hover:scale-105 transition-transform duration-300">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 overflow-hidden rounded-full bg-white p-1 group-hover:scale-105 transition-transform duration-300">
               <img
                 src="https://eminenceextensions.com/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
                 alt="Eminence Hair Co. Logo"
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-xl font-bold text-warm-beige group-hover:text-muted-coral transition-colors duration-300">
+            <span className="text-lg sm:text-xl font-bold text-warm-beige group-hover:text-muted-coral transition-colors duration-300">
               Eminence Hair Co.
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                className={`px-2 lg:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   isActive(item.path)
                     ? 'text-muted-coral bg-muted-coral bg-opacity-10'
                     : 'text-warm-beige hover:text-muted-coral hover:bg-muted-coral hover:bg-opacity-10'
@@ -51,7 +51,7 @@ const Navigation = () => {
             ))}
             <Link
               to="/book"
-              className="btn-primary"
+              className="btn-primary text-sm px-4 py-2"
             >
               Book Now
             </Link>
@@ -61,7 +61,7 @@ const Navigation = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-warm-beige hover:text-muted-coral transition-colors duration-300"
+              className="text-warm-beige hover:text-muted-coral transition-colors duration-300 p-2"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
