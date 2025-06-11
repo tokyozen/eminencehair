@@ -1,0 +1,215 @@
+import React from 'react';
+import { MapPin, Phone, Mail, Clock, Instagram, MessageCircle } from 'lucide-react';
+import BookingForm from '../components/BookingForm';
+
+const Contact = () => {
+  const contactInfo = [
+    {
+      icon: <Phone className="w-6 h-6 text-muted-coral" />,
+      title: "Phone",
+      details: ["(555) 123-4567"],
+      action: "Call now"
+    },
+    {
+      icon: <Mail className="w-6 h-6 text-golden-yellow" />,
+      title: "Email",
+      details: ["hello@eminencehair.com"],
+      action: "Send email"
+    },
+    {
+      icon: <Instagram className="w-6 h-6 text-muted-coral" />,
+      title: "Instagram",
+      details: ["@eminencehairco"],
+      action: "Follow us"
+    },
+    {
+      icon: <MessageCircle className="w-6 h-6 text-golden-yellow" />,
+      title: "DM for Consultation",
+      details: ["Custom orders", "Squeeze-in appointments"],
+      action: "Message us"
+    }
+  ];
+
+  const businessHours = [
+    { day: "Monday", hours: "9:00 AM - 6:00 PM" },
+    { day: "Tuesday", hours: "9:00 AM - 6:00 PM" },
+    { day: "Wednesday", hours: "9:00 AM - 6:00 PM" },
+    { day: "Thursday", hours: "9:00 AM - 6:00 PM" },
+    { day: "Friday", hours: "9:00 AM - 6:00 PM" },
+    { day: "Saturday", hours: "10:00 AM - 4:00 PM" },
+    { day: "Sunday", hours: "Closed" }
+  ];
+
+  const faqs = [
+    {
+      question: "How far in advance should I book?",
+      answer: "We recommend booking at least 1-2 weeks in advance, especially for weekends. Don't forget to drop off your wig 3-5 days before your appointment!"
+    },
+    {
+      question: "What if I need a same-day appointment?",
+      answer: "Same-day appointments are available with a $50 fee (doesn't go toward service total). DM us first to check availability before booking."
+    },
+    {
+      question: "Can I bring my own wig for installation?",
+      answer: "We only install wigs that we customize ourselves. Your wig must be new, HD or transparent lace only, and meet our quality standards."
+    },
+    {
+      question: "What's included in the customization service?",
+      answer: "Our $55 customization includes bleaching knots, plucking the hairline, creating your preferred parting, and prepping the wig to be glueless-ready."
+    },
+    {
+      question: "Do you offer reinstalls?",
+      answer: "Yes! Reinstalls are $60 and available only for wigs originally installed by us. The wig must be in good condition for reinstallation."
+    }
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      {/* Hero Section with Elegant Background */}
+      <section className="relative py-32 px-4 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
+          }}
+        >
+          <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <h1 className="section-title">Get in Touch</h1>
+          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg">
+            Ready to transform your look? Contact us to schedule your appointment or ask any questions 
+            about our services and products.
+          </p>
+        </div>
+      </section>
+
+      <div className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Contact Information */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+            {contactInfo.map((info, index) => (
+              <div key={index} className="card text-center hover:scale-105 transition-transform duration-300">
+                <div className="mb-4 flex justify-center">
+                  {info.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-3 text-warm-beige">{info.title}</h3>
+                {info.details.map((detail, idx) => (
+                  <p key={idx} className="text-gray-300 mb-2">{detail}</p>
+                ))}
+                <button className="text-muted-coral hover:text-burnt-orange font-medium text-sm transition-colors">
+                  {info.action}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Business Hours with Background */}
+          <div className="relative mb-20 overflow-hidden rounded-2xl">
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-20"
+              style={{
+                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
+              }}
+            >
+              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+            </div>
+            
+            <div className="relative z-10 p-8">
+              <h2 className="text-3xl font-bold text-center mb-12 text-warm-beige">Business Hours</h2>
+              <div className="max-w-2xl mx-auto">
+                <div className="card bg-gray-800 bg-opacity-80 backdrop-blur-sm">
+                  <div className="flex items-center justify-center mb-6">
+                    <Clock className="w-6 h-6 text-muted-coral mr-3" />
+                    <h3 className="text-xl font-semibold text-warm-beige">Operating Hours</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {businessHours.map((schedule, index) => (
+                      <div key={index} className="flex justify-between items-center py-2 border-b border-gray-700 last:border-b-0">
+                        <span className="text-gray-300 font-medium">{schedule.day}</span>
+                        <span className={`font-semibold ${schedule.hours === 'Closed' ? 'text-gray-500' : 'text-muted-coral'}`}>
+                          {schedule.hours}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-6 p-4 bg-golden-yellow bg-opacity-10 rounded-lg border border-golden-yellow border-opacity-30">
+                    <p className="text-sm text-golden-yellow text-center">
+                      <strong>Note:</strong> Hours may vary during holidays. Please contact us to confirm availability.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="mb-20">
+            <h2 className="text-3xl font-bold text-center mb-12 text-warm-beige">Frequently Asked Questions</h2>
+            <div className="max-w-4xl mx-auto space-y-6">
+              {faqs.map((faq, index) => (
+                <div key={index} className="card">
+                  <h3 className="text-lg font-semibold mb-3 text-muted-coral">{faq.question}</h3>
+                  <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Booking Form */}
+          <BookingForm 
+            title="Schedule Your Appointment"
+            subtitle="Fill out the form below and we'll get back to you within 24 hours to confirm your booking."
+          />
+
+          {/* Location & Final CTA with Background */}
+          <div className="mt-20 relative overflow-hidden rounded-2xl">
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-30"
+              style={{
+                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
+              }}
+            >
+              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+            </div>
+            
+            <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
+              <div className="mb-6">
+                <MapPin className="w-8 h-8 text-muted-coral mx-auto mb-4" />
+                <h3 className="text-2xl font-bold mb-4 text-warm-beige">Visit Our Studio</h3>
+                <p className="text-gray-300 mb-6">
+                  Located in a convenient, professional setting where you can relax and enjoy your hair transformation experience.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="p-4">
+                  <h4 className="font-semibold text-warm-beige mb-2">Professional Environment</h4>
+                  <p className="text-gray-300 text-sm">Clean, comfortable studio space designed for your relaxation and privacy.</p>
+                </div>
+                <div className="p-4">
+                  <h4 className="font-semibold text-warm-beige mb-2">Expert Service</h4>
+                  <p className="text-gray-300 text-sm">Skilled customization and installation by our experienced professional.</p>
+                </div>
+                <div className="p-4">
+                  <h4 className="font-semibold text-warm-beige mb-2">Quality Results</h4>
+                  <p className="text-gray-300 text-sm">Leave feeling confident and beautiful with your perfectly fitted, styled wig.</p>
+                </div>
+              </div>
+
+              <p className="text-xl text-gray-300 mb-6">
+                Ready to experience the Eminence Hair difference?
+              </p>
+              <button className="btn-primary text-lg px-8 py-4">
+                Book Your Transformation Today
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Contact;
