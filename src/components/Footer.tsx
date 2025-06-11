@@ -118,7 +118,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <Phone className="w-5 h-5 text-muted-coral mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300 font-medium">(555) 123-4567</p>
+                  <p className="text-gray-300 font-medium">(204) 825-8526</p>
                   <p className="text-gray-400 text-sm">Call for appointments</p>
                 </div>
               </div>
@@ -126,7 +126,7 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <Mail className="w-5 h-5 text-golden-yellow mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300 font-medium">hello@eminencehair.com</p>
+                  <p className="text-gray-300 font-medium">eihu335@gmail.com</p>
                   <p className="text-gray-400 text-sm">General inquiries</p>
                 </div>
               </div>
