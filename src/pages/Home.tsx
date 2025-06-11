@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Crown, Heart, Star, Mail, Gift } from 'lucide-react';
+import { Sparkles, Crown, Heart, Star, Mail, Gift, Scissors, Clock, DollarSign } from 'lucide-react';
 import BookingForm from '../components/BookingForm';
 
 const Home = () => {
@@ -27,6 +27,33 @@ const Home = () => {
       icon: <Star className="w-8 h-8 text-muted-coral" />,
       title: "Ready to Wear",
       description: "Fully customized wigs that are styled and ready for installation"
+    }
+  ];
+
+  const popularServices = [
+    {
+      icon: <Scissors className="w-8 h-8 text-muted-coral" />,
+      name: "Wig Install + Styling",
+      price: "$80",
+      duration: "3-4 hours",
+      description: "Complete installation with custom styling",
+      popular: true
+    },
+    {
+      icon: <Crown className="w-8 h-8 text-golden-yellow" />,
+      name: "Basic Wig Customization",
+      price: "$55",
+      duration: "4-6 hours",
+      description: "Bleaching, plucking, and glueless prep",
+      popular: false
+    },
+    {
+      icon: <Sparkles className="w-8 h-8 text-muted-coral" />,
+      name: "Reinstalls",
+      price: "$60",
+      duration: "2-3 hours",
+      description: "For wigs originally installed by us",
+      popular: false
     }
   ];
 
@@ -121,6 +148,142 @@ const Home = () => {
                 </Link>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services & Pricing Section */}
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
+          }}
+        >
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="section-title">Our Services</h2>
+            <p className="text-xl text-warm-beige max-w-3xl mx-auto">
+              Professional wig installation and customization services designed to make you look and feel amazing
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {popularServices.map((service, index) => (
+              <div key={index} className="relative group">
+                {service.popular && (
+                  <div className="absolute -top-3 -right-3 z-10">
+                    <div className="bg-gradient-to-r from-muted-coral to-burnt-orange text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                      Most Popular
+                    </div>
+                  </div>
+                )}
+                
+                <div className={`card h-full hover:scale-105 transition-all duration-300 ${
+                  service.popular 
+                    ? 'bg-gradient-to-br from-muted-coral/10 to-golden-yellow/10 border-2 border-muted-coral border-opacity-30' 
+                    : 'bg-gray-800 bg-opacity-70 backdrop-blur-sm'
+                }`}>
+                  <div className="text-center mb-6">
+                    <div className="mb-4 flex justify-center">
+                      <div className={`p-4 rounded-full ${
+                        service.popular 
+                          ? 'bg-muted-coral bg-opacity-20' 
+                          : 'bg-golden-yellow bg-opacity-20'
+                      }`}>
+                        {service.icon}
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold mb-2 text-warm-beige group-hover:text-muted-coral transition-colors">
+                      {service.name}
+                    </h3>
+                    
+                    <div className="flex items-center justify-center space-x-4 mb-4">
+                      <div className="flex items-center text-2xl font-bold text-muted-coral">
+                        <DollarSign className="w-6 h-6 mr-1" />
+                        {service.price.replace('$', '')}
+                      </div>
+                      <div className="flex items-center text-sm text-gray-400">
+                        <Clock className="w-4 h-4 mr-1" />
+                        {service.duration}
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-300 leading-relaxed">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Service Features */}
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="card bg-gray-800 bg-opacity-70 backdrop-blur-sm">
+              <h3 className="text-xl font-semibold mb-4 text-warm-beige flex items-center">
+                <Crown className="w-6 h-6 text-golden-yellow mr-3" />
+                What's Included
+              </h3>
+              <ul className="space-y-3">
+                {[
+                  "Professional consultation",
+                  "Expert wig preparation",
+                  "Precise installation technique",
+                  "Custom styling (where applicable)",
+                  "Aftercare instructions"
+                ].map((item, index) => (
+                  <li key={index} className="text-gray-300 flex items-center">
+                    <div className="w-2 h-2 bg-muted-coral rounded-full mr-3"></div>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="card bg-gray-800 bg-opacity-70 backdrop-blur-sm">
+              <h3 className="text-xl font-semibold mb-4 text-warm-beige flex items-center">
+                <Sparkles className="w-6 h-6 text-muted-coral mr-3" />
+                Why Choose Us
+              </h3>
+              <ul className="space-y-3">
+                {[
+                  "100% human hair quality",
+                  "Expert customization process",
+                  "Professional installation",
+                  "Ready-to-wear results",
+                  "Satisfaction guaranteed"
+                ].map((item, index) => (
+                  <li key={index} className="text-gray-300 flex items-center">
+                    <div className="w-2 h-2 bg-golden-yellow rounded-full mr-3"></div>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="text-center">
+            <div className="inline-block">
+              <Link 
+                to="/services" 
+                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-warm-beige bg-gradient-to-r from-muted-coral to-burnt-orange rounded-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300"
+              >
+                <span className="relative z-10 flex items-center">
+                  View All Services & Pricing
+                  <Sparkles className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform duration-300" />
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-burnt-orange to-muted-coral rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </Link>
+            </div>
+            <p className="text-gray-400 text-sm mt-4">
+              All prices reflect our current soft launch rates
+            </p>
           </div>
         </div>
       </section>
