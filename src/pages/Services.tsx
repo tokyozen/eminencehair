@@ -252,28 +252,28 @@ const Services = () => {
             </div>
           </div>
 
-          {/* CTA Section with Background */}
+          {/* CTA Section with New Background */}
           <div className="relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-30"
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
               style={{
-                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
+                backgroundImage: 'url(https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-75"></div>
             </div>
             
-            <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
-              <h2 className="text-3xl font-bold mb-6 text-warm-beige">Ready to Book Your Service?</h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm border-2 border-white border-opacity-10">
+              <h2 className="text-3xl font-bold mb-6 text-warm-beige drop-shadow-lg">Ready to Book Your Service?</h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto drop-shadow-lg">
                 Have questions about our services or want to schedule an appointment? 
                 Contact us today to discuss your hair transformation needs.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="btn-primary text-lg px-8 py-4">
+                <button className="btn-primary text-lg px-8 py-4 shadow-2xl">
                   Book Appointment
                 </button>
-                <button className="btn-secondary text-lg px-8 py-4">
+                <button className="btn-secondary text-lg px-8 py-4 shadow-2xl">
                   Ask Questions
                 </button>
               </div>
