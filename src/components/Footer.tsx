@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Scissors, 
   MapPin, 
   Phone, 
   Mail, 
@@ -45,8 +44,12 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="mb-6">
               <Link to="/" className="flex items-center space-x-3 group mb-4">
-                <div className="bg-muted-coral bg-opacity-20 p-3 rounded-full group-hover:bg-opacity-30 transition-all duration-300">
-                  <Scissors className="h-8 w-8 text-muted-coral group-hover:text-burnt-orange transition-colors duration-300" />
+                <div className="h-12 w-12 overflow-hidden rounded-full bg-white p-2 group-hover:scale-105 transition-transform duration-300">
+                  <img
+                    src="https://eminenceextensions.com/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
+                    alt="Eminence Hair Co. Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <span className="text-2xl font-bold text-warm-beige group-hover:text-muted-coral transition-colors duration-300">
                   Eminence Hair Co.

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Scissors } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,8 +21,14 @@ const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <Scissors className="h-8 w-8 text-muted-coral group-hover:text-burnt-orange transition-colors duration-300" />
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="h-10 w-10 overflow-hidden rounded-full bg-white p-1 group-hover:scale-105 transition-transform duration-300">
+              <img
+                src="https://eminenceextensions.com/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
+                alt="Eminence Hair Co. Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
             <span className="text-xl font-bold text-warm-beige group-hover:text-muted-coral transition-colors duration-300">
               Eminence Hair Co.
             </span>
