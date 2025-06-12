@@ -8,13 +8,6 @@ const BookNow = () => {
 
   const serviceCategories = [
     {
-      id: 'book-the-look',
-      name: 'Book The Look',
-      icon: <Star className="w-5 h-5 sm:w-6 sm:h-6" />,
-      description: 'Complete transformation packages',
-      color: 'from-muted-coral to-burnt-orange'
-    },
-    {
       id: 'installation',
       name: 'Installation Services',
       icon: <Crown className="w-5 h-5 sm:w-6 sm:h-6" />,
@@ -38,16 +31,6 @@ const BookNow = () => {
   ];
 
   const services = {
-    'book-the-look': [
-      {
-        id: 'complete-transformation',
-        name: 'Complete Hair Transformation',
-        duration: '4-6 hours',
-        price: 135,
-        description: 'Full wig customization + installation + styling',
-        includes: ['Wig customization', 'Professional installation', 'Custom styling', 'Aftercare kit']
-      }
-    ],
     'installation': [
       {
         id: 'install-no-styling',
@@ -181,7 +164,7 @@ const BookNow = () => {
                 <p className="text-gray-300 text-sm sm:text-base">Choose the type of service you're looking for</p>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {serviceCategories.map((category) => (
                   <button
                     key={category.id}
