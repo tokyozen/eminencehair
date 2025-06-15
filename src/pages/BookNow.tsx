@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Clock, DollarSign, CheckCircle, Star, Heart, Crown } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, DollarSign, CheckCircle, Star, Heart, Crown, Plus, Minus } from 'lucide-react';
 
 const BookNow = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState<string>('');
   const [currentStep, setCurrentStep] = useState(1);
 
   const serviceCategories = [
@@ -79,6 +82,50 @@ const BookNow = () => {
     ]
   };
 
+  const addOnServices = [
+    {
+      id: 'jet-black-coloring',
+      name: 'Jet Black Coloring',
+      price: 75,
+      duration: '45 minutes',
+      description: 'Professional jet black color application'
+    },
+    {
+      id: 'professional-toning',
+      name: 'Professional Toning (Blonde Wigs)',
+      price: 75,
+      duration: '60 minutes',
+      description: 'Color correction and toning for blonde wigs'
+    },
+    {
+      id: 'rush-service',
+      name: 'Rush Service (24-72hrs)',
+      price: 40,
+      duration: 'Priority processing',
+      description: 'Expedited service completion'
+    },
+    {
+      id: 'same-day-customization',
+      name: 'Same Day Customization',
+      price: 45,
+      duration: '45 minutes',
+      description: 'Same-day wig preparation service'
+    },
+    {
+      id: 'sew-in-bundle',
+      name: 'Sew In/Glue in a Bundle',
+      price: 30,
+      duration: '30 minutes',
+      description: 'Additional bundle installation'
+    }
+  ];
+
+  const timeSlots = [
+    '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+    '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM',
+    '3:00 PM', '3:30 PM', '4:00 PM', '4:30 PM', '5:00 PM'
+  ];
+
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(categoryId);
     setSelectedService(null);
@@ -90,6 +137,14 @@ const BookNow = () => {
     setCurrentStep(3);
   };
 
+  const handleAddOnToggle = (addOnId: string) => {
+    setSelectedAddOns(prev => 
+      prev.includes(addOnId) 
+        ? prev.filter(id => id !== addOnId)
+        : [...prev, addOnId]
+    );
+  };
+
   const handleBack = () => {
     if (currentStep === 2) {
       setCurrentStep(1);
@@ -97,12 +152,56 @@ const BookNow = () => {
     } else if (currentStep === 3) {
       setCurrentStep(2);
       setSelectedService(null);
+    } else if (currentStep === 4) {
+      setCurrentStep(3);
     }
+  };
+
+  const handleContinueToDateTime = () => {
+    setCurrentStep(4);
   };
 
   const getCurrentService = () => {
     if (!selectedCategory || !selectedService) return null;
     return services[selectedCategory as keyof typeof services]?.find(s => s.id === selectedService);
+  };
+
+  const getSelectedAddOns = () => {
+    return addOnServices.filter(addon => selectedAddOns.includes(addon.id));
+  };
+
+  const getTotalPrice = () => {
+    const basePrice = getCurrentService()?.price || 0;
+    const addOnPrice = getSelectedAddOns().reduce((total, addon) => total + addon.price, 0);
+    return basePrice + addOnPrice;
+  };
+
+  const generateCalendarDays = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - firstDay.getDay());
+    
+    const days = [];
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  const formatDate = (date: Date) => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const isDateAvailable = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date >= today && date.getDay() !== 0; // Not Sunday
   };
 
   return (
@@ -149,6 +248,12 @@ const BookNow = () => {
                 currentStep >= 3 ? 'bg-muted-coral text-white' : 'bg-gray-700 text-gray-400'
               }`}>
                 3
+              </div>
+              <div className={`w-8 sm:w-16 h-1 ${currentStep >= 4 ? 'bg-muted-coral' : 'bg-gray-700'}`}></div>
+              <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base ${
+                currentStep >= 4 ? 'bg-muted-coral text-white' : 'bg-gray-700 text-gray-400'
+              }`}>
+                4
               </div>
             </div>
           </div>
@@ -209,7 +314,7 @@ const BookNow = () => {
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold text-warm-beige mb-1 sm:mb-2 flex items-center">
                     <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-muted-coral mr-3" />
-                    Select Appointment
+                    Select Service
                   </h2>
                   <p className="text-muted-coral font-medium text-sm sm:text-base">
                     {serviceCategories.find(c => c.id === selectedCategory)?.name}
@@ -263,7 +368,7 @@ const BookNow = () => {
             </div>
           )}
 
-          {/* Step 3: Booking Form */}
+          {/* Step 3: Add-ons Selection */}
           {currentStep === 3 && selectedService && (
             <div className="animate-fade-in">
               <div className="flex items-center mb-6 sm:mb-8">
@@ -274,128 +379,215 @@ const BookNow = () => {
                   <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-warm-beige" />
                 </button>
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-warm-beige mb-1 sm:mb-2">Complete Your Booking</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-warm-beige mb-1 sm:mb-2">Add-On Services</h2>
                   <p className="text-muted-coral font-medium text-sm sm:text-base">
-                    {getCurrentService()?.name} - ${getCurrentService()?.price}
+                    Enhance your service with these optional add-ons
                   </p>
                 </div>
               </div>
 
               {/* Service Summary */}
               <div className="card mb-6 sm:mb-8 bg-gradient-to-br from-muted-coral/10 to-golden-yellow/10 border-2 border-muted-coral border-opacity-30">
-                <h3 className="text-lg font-semibold text-warm-beige mb-4">Service Summary</h3>
-                <div className="grid sm:grid-cols-3 gap-3 sm:gap-4 mb-4">
+                <h3 className="text-lg font-semibold text-warm-beige mb-4">Selected Service</h3>
+                <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-gray-400 text-xs sm:text-sm">Service</p>
                     <p className="text-warm-beige font-medium text-sm sm:text-base">{getCurrentService()?.name}</p>
+                    <p className="text-gray-400 text-xs sm:text-sm">{getCurrentService()?.duration}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-400 text-xs sm:text-sm">Duration</p>
-                    <p className="text-warm-beige font-medium text-sm sm:text-base">{getCurrentService()?.duration}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-xs sm:text-sm">Price</p>
-                    <p className="text-muted-coral font-bold text-lg">${getCurrentService()?.price}.00</p>
-                  </div>
+                  <p className="text-muted-coral font-bold text-lg">${getCurrentService()?.price}.00</p>
                 </div>
               </div>
 
-              {/* Booking Form */}
-              <div className="card">
-                <form className="space-y-4 sm:space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-warm-beige">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        className="input-field"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-warm-beige">
-                        Phone Number *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        className="input-field"
-                        placeholder="(204) 825-8526"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-warm-beige">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      className="input-field"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-warm-beige">
-                        Preferred Date *
-                      </label>
-                      <input
-                        type="date"
-                        required
-                        className="input-field"
-                        min={new Date().toISOString().split('T')[0]}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2 text-warm-beige">
-                        Preferred Time *
-                      </label>
-                      <select required className="input-field">
-                        <option value="">Select a time</option>
-                        <option value="9:00 AM">9:00 AM</option>
-                        <option value="10:00 AM">10:00 AM</option>
-                        <option value="11:00 AM">11:00 AM</option>
-                        <option value="12:00 PM">12:00 PM</option>
-                        <option value="1:00 PM">1:00 PM</option>
-                        <option value="2:00 PM">2:00 PM</option>
-                        <option value="3:00 PM">3:00 PM</option>
-                        <option value="4:00 PM">4:00 PM</option>
-                        <option value="5:00 PM">5:00 PM</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-warm-beige">
-                      Additional Notes
-                    </label>
-                    <textarea
-                      rows={4}
-                      className="input-field resize-none"
-                      placeholder="Any special requests or questions?"
-                    />
-                  </div>
-
-                  <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-3 sm:p-4 border border-golden-yellow border-opacity-30">
-                    <p className="text-xs sm:text-sm text-golden-yellow font-medium">
-                      <strong>Important:</strong> Please read our booking policies before submitting. 
-                      We require 24-hour advance notice for rescheduling and have specific requirements for wig drop-offs.
-                    </p>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4 shadow-2xl"
+              {/* Add-on Services */}
+              <div className="space-y-3 sm:space-y-4 mb-8">
+                <h3 className="text-lg font-semibold text-warm-beige mb-4">ADD TO APPOINTMENT</h3>
+                {addOnServices.map((addon) => (
+                  <div
+                    key={addon.id}
+                    className={`p-4 rounded-lg border transition-all duration-300 cursor-pointer ${
+                      selectedAddOns.includes(addon.id)
+                        ? 'bg-muted-coral bg-opacity-10 border-muted-coral'
+                        : 'bg-gray-800 bg-opacity-50 border-gray-700 hover:border-gray-600'
+                    }`}
+                    onClick={() => handleAddOnToggle(addon.id)}
                   >
-                    Complete Booking Request
-                  </button>
-                </form>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          selectedAddOns.includes(addon.id)
+                            ? 'bg-muted-coral border-muted-coral'
+                            : 'border-gray-500'
+                        }`}>
+                          {selectedAddOns.includes(addon.id) && (
+                            <CheckCircle className="w-3 h-3 text-white" />
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="text-warm-beige font-medium">{addon.name}</h4>
+                          <p className="text-gray-400 text-sm">{addon.description}</p>
+                          <p className="text-gray-400 text-xs">{addon.duration}</p>
+                        </div>
+                      </div>
+                      <div className="text-muted-coral font-bold">
+                        + ${addon.price}.00
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Total and Continue */}
+              <div className="card bg-gradient-to-br from-golden-yellow/10 to-muted-coral/10 border-2 border-golden-yellow border-opacity-30">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-lg font-semibold text-warm-beige">Total</span>
+                  <span className="text-2xl font-bold text-muted-coral">${getTotalPrice()}.00</span>
+                </div>
+                <button
+                  onClick={handleContinueToDateTime}
+                  className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
+                >
+                  Continue to Date & Time
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Date & Time Selection */}
+          {currentStep === 4 && (
+            <div className="animate-fade-in">
+              <div className="flex items-center mb-6 sm:mb-8">
+                <button
+                  onClick={handleBack}
+                  className="mr-3 sm:mr-4 p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-warm-beige" />
+                </button>
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-warm-beige mb-1 sm:mb-2">Select Date & Time</h2>
+                  <p className="text-muted-coral font-medium text-sm sm:text-base">
+                    Choose your preferred appointment slot
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-8">
+                {/* Calendar */}
+                <div className="card">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-semibold text-warm-beige">June 2025</h3>
+                    <div className="flex space-x-2">
+                      <button className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
+                        <ArrowLeft className="w-4 h-4 text-warm-beige" />
+                      </button>
+                      <button className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
+                        <ArrowLeft className="w-4 h-4 text-warm-beige transform rotate-180" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-1 mb-4">
+                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day) => (
+                      <div key={day} className="text-center text-gray-400 text-sm font-medium py-2">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1">
+                    {generateCalendarDays().map((date, index) => {
+                      const dateStr = formatDate(date);
+                      const isCurrentMonth = date.getMonth() === new Date().getMonth();
+                      const isAvailable = isDateAvailable(date);
+                      const isSelected = selectedDate === dateStr;
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => isAvailable ? setSelectedDate(dateStr) : null}
+                          disabled={!isAvailable}
+                          className={`aspect-square flex items-center justify-center text-sm rounded-lg transition-all duration-200 ${
+                            isSelected
+                              ? 'bg-muted-coral text-white font-bold'
+                              : isAvailable
+                              ? 'text-warm-beige hover:bg-gray-700'
+                              : 'text-gray-600 cursor-not-allowed'
+                          } ${!isCurrentMonth ? 'opacity-30' : ''}`}
+                        >
+                          {date.getDate()}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 text-xs text-gray-400 text-center">
+                    TIME ZONE: EASTERN TIME (GMT-04:00)
+                  </div>
+                </div>
+
+                {/* Time Selection */}
+                <div className="card">
+                  <h3 className="text-lg font-semibold text-warm-beige mb-6">Available Times</h3>
+                  
+                  {selectedDate ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      {timeSlots.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => setSelectedTime(time)}
+                          className={`p-3 rounded-lg border transition-all duration-200 ${
+                            selectedTime === time
+                              ? 'bg-muted-coral border-muted-coral text-white'
+                              : 'bg-gray-800 border-gray-600 text-warm-beige hover:border-muted-coral'
+                          }`}
+                        >
+                          {time}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-400 py-8">
+                      Please select a date first
+                    </div>
+                  )}
+
+                  {/* Booking Summary */}
+                  {selectedDate && selectedTime && (
+                    <div className="mt-8 p-4 bg-gradient-to-br from-golden-yellow/10 to-muted-coral/10 rounded-lg border border-golden-yellow border-opacity-30">
+                      <h4 className="font-semibold text-warm-beige mb-3">Booking Summary</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-300">Service:</span>
+                          <span className="text-warm-beige">{getCurrentService()?.name}</span>
+                        </div>
+                        {getSelectedAddOns().map((addon) => (
+                          <div key={addon.id} className="flex justify-between">
+                            <span className="text-gray-300">+ {addon.name}:</span>
+                            <span className="text-warm-beige">${addon.price}</span>
+                          </div>
+                        ))}
+                        <div className="flex justify-between">
+                          <span className="text-gray-300">Date:</span>
+                          <span className="text-warm-beige">{new Date(selectedDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-300">Time:</span>
+                          <span className="text-warm-beige">{selectedTime}</span>
+                        </div>
+                        <div className="border-t border-gray-600 pt-2 mt-3">
+                          <div className="flex justify-between font-bold">
+                            <span className="text-warm-beige">Total:</span>
+                            <span className="text-muted-coral text-lg">${getTotalPrice()}.00</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <button className="w-full btn-primary mt-4">
+                        Complete Booking
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
