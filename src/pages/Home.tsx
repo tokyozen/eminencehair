@@ -140,7 +140,7 @@ const Home = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                       <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-muted-coral xl:hidden">
                         <img
-                          src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
+                          src="https://eminenceextensions.com/old/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
                           alt="CEO of Eminence Hair Co."
                           className="w-full h-full object-cover"
                         />
@@ -180,17 +180,17 @@ const Home = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
-                image: "https://eminenceextensions.com/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg",
+                image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg",
                 title: "Body Wave Collection",
                 description: "Luxurious body wave texture for effortless elegance"
               },
               {
-                image: "https://eminenceextensions.com/wp-content/uploads/2025/05/4928a5b9-be1f-4d6e-9bdb-927a8f2afa9b.jpg",
+                image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/4928a5b9-be1f-4d6e-9bdb-927a8f2afa9b.jpg",
                 title: "Straight Hair Bundles",
                 description: "Sleek and smooth straight hair for a classic look"
               },
               {
-                image: "https://eminenceextensions.com/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg",
+                image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg",
                 title: "Exotic Curly Wigs",
                 description: "Beautiful curls that add volume and personality"
               }
@@ -224,7 +224,7 @@ const Home = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
-            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
+            backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
           }}
         >
           <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
@@ -360,7 +360,7 @@ const Home = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
-            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
+            backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
           <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
@@ -395,7 +395,7 @@ const Home = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
+            backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
           }}
         >
           <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
