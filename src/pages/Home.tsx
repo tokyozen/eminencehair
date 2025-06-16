@@ -115,7 +115,7 @@ const Home = () => {
               <div className="relative group">
                 <div className="w-64 h-80 lg:w-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
                   <img
-                    src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
+                    src="https://eminenceextensions.com/old/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
                     alt="CEO of Eminence Hair Co."
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
