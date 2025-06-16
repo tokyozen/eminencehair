@@ -24,7 +24,7 @@ const Navigation = () => {
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group">
             <div className="h-8 w-8 sm:h-10 sm:w-10 overflow-hidden rounded-full bg-white p-1 group-hover:scale-105 transition-transform duration-300">
               <img
-                src="https://eminenceextensions.com/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
+                src="https://eminenceextensions.com/old/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
                 alt="Eminence Hair Co. Logo"
                 className="w-full h-full object-contain"
               />
