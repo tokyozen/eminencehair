@@ -46,7 +46,7 @@ const Footer = () => {
               <Link to="/" className="flex items-center space-x-2 sm:space-x-3 group mb-3 sm:mb-4">
                 <div className="h-10 w-10 sm:h-12 sm:w-12 overflow-hidden rounded-full bg-white p-2 group-hover:scale-105 transition-transform duration-300">
                   <img
-                    src="https://eminenceextensions.com/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
+                    src="https://eminenceextensions.com/old/wp-content/uploads/2025/05/cropped-Untitled-design-3-e1747465790837.png"
                     alt="Eminence Hair Co. Logo"
                     className="w-full h-full object-contain"
                   />
