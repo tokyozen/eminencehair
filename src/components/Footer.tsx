@@ -39,7 +39,7 @@ const Footer = () => {
 
   // Function to open Google Maps with directions to Lanham, MD
   const openDirections = () => {
-    const address = "Lanham, MD 20706, USA";
+    const address = "38.961281416356485, -76.8425249471373";
     const encodedAddress = encodeURIComponent(address);
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
     window.open(mapsUrl, '_blank');
