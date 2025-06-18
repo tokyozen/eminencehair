@@ -132,7 +132,7 @@ const Services = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
+            backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
           }}
         >
           <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
@@ -185,7 +185,7 @@ const Services = () => {
             <div 
               className="absolute inset-0 bg-cover bg-center opacity-20"
               style={{
-                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
+                backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
             >
               <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
