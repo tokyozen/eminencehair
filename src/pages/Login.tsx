@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Phone, Calendar, Package, Heart, Star } from 'lucide-react';
+import { signIn, signUp } from '../lib/supabase';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,24 +15,72 @@ const Login = () => {
     phone: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error when user starts typing
+    if (error) setError(null);
+  };
+
+  const validateForm = () => {
+    if (!formData.email || !formData.password) {
+      setError('Email and password are required');
+      return false;
+    }
+
+    if (!isLogin) {
+      if (!formData.firstName || !formData.lastName) {
+        setError('First name and last name are required');
+        return false;
+      }
+      
+      if (formData.password !== formData.confirmPassword) {
+        setError('Passwords do not match');
+        return false;
+      }
+      
+      if (formData.password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        return false;
+      }
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      if (isLogin) {
+        // Sign in existing user
+        await signIn(formData.email, formData.password);
+        navigate('/dashboard');
+      } else {
+        // Create new account
+        await signUp(formData.email, formData.password, {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone
+        });
+        navigate('/dashboard');
+      }
+    } catch (err: any) {
+      console.error('Authentication error:', err);
+      setError(err.message || 'An error occurred during authentication');
+    } finally {
       setIsLoading(false);
-      // Redirect to dashboard would happen here
-      alert(isLogin ? 'Login successful!' : 'Account created successfully!');
-    }, 1500);
+    }
   };
 
   const benefits = [
@@ -89,7 +138,10 @@ const Login = () => {
               <div className="mb-6">
                 <div className="flex bg-gray-700 bg-opacity-50 rounded-lg p-1 mb-6">
                   <button
-                    onClick={() => setIsLogin(true)}
+                    onClick={() => {
+                      setIsLogin(true);
+                      setError(null);
+                    }}
                     className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-300 ${
                       isLogin 
                         ? 'bg-muted-coral text-white shadow-lg' 
@@ -99,7 +151,10 @@ const Login = () => {
                     Sign In
                   </button>
                   <button
-                    onClick={() => setIsLogin(false)}
+                    onClick={() => {
+                      setIsLogin(false);
+                      setError(null);
+                    }}
                     className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-300 ${
                       !isLogin 
                         ? 'bg-muted-coral text-white shadow-lg' 
@@ -110,6 +165,12 @@ const Login = () => {
                   </button>
                 </div>
               </div>
+
+              {error && (
+                <div className="mb-6 p-4 bg-red-600 bg-opacity-20 border border-red-500 border-opacity-50 rounded-lg">
+                  <p className="text-red-400 text-sm">{error}</p>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!isLogin && (
@@ -166,14 +227,13 @@ const Login = () => {
                   <div>
                     <label className="block text-sm font-medium mb-2 text-warm-beige">
                       <Phone className="inline w-4 h-4 mr-2" />
-                      Phone Number *
+                      Phone Number
                     </label>
                     <input
                       type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      required={!isLogin}
                       className="input-field"
                       placeholder="(204) 825-8526"
                     />
