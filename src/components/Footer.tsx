@@ -37,10 +37,9 @@ const Footer = () => {
     'Sunday: Closed'
   ];
 
-  // Function to open Google Maps with directions
+  // Function to open Google Maps with directions to Lanham, MD
   const openDirections = () => {
-    // Using a general Winnipeg, MB location - replace with actual studio address
-    const address = "Winnipeg, MB, Canada";
+    const address = "Lanham, MD, USA";
     const encodedAddress = encodeURIComponent(address);
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
     window.open(mapsUrl, '_blank');
@@ -48,7 +47,7 @@ const Footer = () => {
 
   // Function to open location in Google Maps
   const openLocation = () => {
-    const address = "Winnipeg, MB, Canada";
+    const address = "Lanham, MD, USA";
     const encodedAddress = encodeURIComponent(address);
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
     window.open(mapsUrl, '_blank');
@@ -210,17 +209,17 @@ const Footer = () => {
             
             {/* Interactive Map Container */}
             <div className="bg-gray-800 bg-opacity-50 rounded-xl overflow-hidden mb-4 sm:mb-6 border border-gray-700 hover:border-muted-coral transition-all duration-300 group">
-              {/* Map Iframe */}
+              {/* Map Iframe - Updated for Lanham, MD */}
               <div className="aspect-square relative">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2569.8234567890123!2d-97.13906!3d49.895077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDnCsDUzJzQyLjMiTiA5N8KwMDgnMjAuNiJX!5e0!3m2!1sen!2sca!4v1234567890123!5m2!1sen!2sca"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d49449.35657479!2d-76.8631!3d38.9684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7c6de5af6e45b%3A0xc2524522d4885d2a!2sLanham%2C%20MD%2C%20USA!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Eminence Hair Co. Location"
+                  title="Eminence Hair Co. Location - Lanham, MD"
                   className="transition-all duration-300 group-hover:brightness-110"
                 />
                 
@@ -231,7 +230,7 @@ const Footer = () => {
                       <MapPin className="w-4 h-4 text-muted-coral mr-2" />
                       <span className="font-medium text-sm">Professional Studio</span>
                     </div>
-                    <p className="text-gray-300 text-xs">Winnipeg, MB</p>
+                    <p className="text-gray-300 text-xs">Lanham, MD</p>
                   </div>
                 </div>
               </div>
@@ -272,7 +271,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center text-xs sm:text-sm text-gray-300">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-muted-coral rounded-full mr-3"></div>
-                Convenient Location
+                Convenient DMV Location
               </div>
             </div>
           </div>
