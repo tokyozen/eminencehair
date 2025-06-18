@@ -57,7 +57,7 @@ const About = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
-            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
+            backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
           <div className="absolute inset-0 bg-soft-black bg-opacity-75"></div>
@@ -79,7 +79,7 @@ const About = () => {
             <div 
               className="absolute inset-0 bg-cover bg-center"
               style={{
-                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
+                backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
               <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
@@ -133,7 +133,7 @@ const About = () => {
                     {/* Main Photo */}
                     <div className="relative z-10 w-80 h-96 mx-auto rounded-2xl overflow-hidden shadow-2xl transform -rotate-2 group-hover:rotate-0 transition-transform duration-500">
                       <img
-                        src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
+                        src="https://eminenceextensions.com/old/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.58.jpeg"
                         alt="CEO of Eminence Hair Co."
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -143,7 +143,7 @@ const About = () => {
                     {/* Secondary Photo - Overlapping */}
                     <div className="absolute top-8 -right-8 w-48 h-64 rounded-xl overflow-hidden shadow-xl transform rotate-6 group-hover:rotate-3 transition-transform duration-500 border-4 border-white border-opacity-20">
                       <img
-                        src="https://eminenceextensions.com/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.57.jpeg"
+                        src="https://eminenceextensions.com/old/wp-content/uploads/2025/06/WhatsApp-Image-2025-06-11-at-18.51.57.jpeg"
                         alt="CEO working on hair customization"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
@@ -172,7 +172,7 @@ const About = () => {
             <div 
               className="absolute inset-0 bg-cover bg-center bg-fixed opacity-30"
               style={{
-                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
+                backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
               }}
             >
               <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
@@ -214,7 +214,7 @@ const About = () => {
             <div 
               className="absolute inset-0 bg-cover bg-center opacity-20"
               style={{
-                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
+                backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
             >
               <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
