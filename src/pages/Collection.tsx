@@ -13,7 +13,7 @@ const Collection = () => {
       density: "180%",
       lengths: ["18\"", "20\"", "22\"", "24\"", "26\"", "28\"", "30\""],
       prices: [271, 290, 328, 341, 373, 393, 438],
-      image: "https://eminenceextensions.com/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg",
+      image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg",
       description: "Natural body wave texture with HD lace for seamless blending"
     },
     {
@@ -23,7 +23,7 @@ const Collection = () => {
       density: "180%",
       lengths: ["18\"", "20\"", "22\"", "24\"", "26\"", "28\"", "30\""],
       prices: [271, 290, 328, 341, 373, 393, 438],
-      image: "https://eminenceextensions.com/wp-content/uploads/2025/05/4928a5b9-be1f-4d6e-9bdb-927a8f2afa9b.jpg",
+      image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/4928a5b9-be1f-4d6e-9bdb-927a8f2afa9b.jpg",
       description: "Sleek straight hair with premium HD lace construction"
     },
     {
@@ -33,7 +33,7 @@ const Collection = () => {
       density: "180%",
       lengths: ["18\"", "20\"", "22\"", "24\"", "26\"", "28\"", "30\""],
       prices: [281, 300, 338, 351, 383, 403, 448],
-      image: "https://eminenceextensions.com/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg",
+      image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg",
       description: "Beautiful deep wave curls for added volume and texture"
     },
     {
@@ -43,7 +43,7 @@ const Collection = () => {
       density: "200%",
       lengths: ["32\"", "34\"", "36\"", "38\"", "40\""],
       prices: [445, 537, 597, 685, 750],
-      image: "https://eminenceextensions.com/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg",
+      image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/780c71b2-7749-454f-95b6-66ada0d324e7.jpg",
       description: "Extra length body wave with 200% density for fuller coverage"
     },
     {
@@ -53,7 +53,7 @@ const Collection = () => {
       density: "180%",
       lengths: ["20\"", "24\"", "26\"", "28\"", "30\""],
       prices: [268, 315, 351, 393, 423],
-      image: "https://eminenceextensions.com/wp-content/uploads/2025/05/4928a5b9-be1f-4d6e-9bdb-927a8f2afa9b.jpg",
+      image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/4928a5b9-be1f-4d6e-9bdb-927a8f2afa9b.jpg",
       description: "Classic 13x4 lace frontal with natural hairline"
     },
     {
@@ -63,7 +63,7 @@ const Collection = () => {
       density: "200%",
       lengths: ["18\"", "20\"", "22\"", "24\"", "26\"", "28\"", "30\"", "32\"", "34\"", "36\"", "38\"", "40\""],
       prices: [313, 338, 357, 413, 433, 453, 473, 455, 547, 607, 695, 765],
-      image: "https://eminenceextensions.com/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg",
+      image: "https://eminenceextensions.com/old/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg",
       description: "Premium deep wave with maximum density for ultimate fullness"
     }
   ];
@@ -86,7 +86,7 @@ const Collection = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
+            backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
           <div className="absolute inset-0 bg-soft-black bg-opacity-75"></div>
@@ -199,7 +199,7 @@ const Collection = () => {
             <div 
               className="absolute inset-0 bg-cover bg-center opacity-30"
               style={{
-                backgroundImage: 'url(https://eminenceextensions.com/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
+                backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
               <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
