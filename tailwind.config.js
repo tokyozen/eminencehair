@@ -6,9 +6,9 @@ export default {
       colors: {
         'soft-black': '#1C1C1C',
         'warm-beige': '#F5E8D8',
-        'muted-coral': '#FF6F61',
-        'golden-yellow': '#DAA520',
-        'burnt-orange': '#FF4500',
+        'muted-coral': '#ae9270',
+        'golden-yellow': '#664a32',
+        'burnt-orange': '#7b7c72',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
