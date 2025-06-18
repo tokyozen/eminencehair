@@ -9,7 +9,9 @@ import {
   Clock,
   Heart,
   Crown,
-  Sparkles
+  Sparkles,
+  ExternalLink,
+  Navigation
 } from 'lucide-react';
 
 const Footer = () => {
@@ -34,6 +36,23 @@ const Footer = () => {
     'Saturday: 10:00 AM - 4:00 PM',
     'Sunday: Closed'
   ];
+
+  // Function to open Google Maps with directions
+  const openDirections = () => {
+    // Using a general Winnipeg, MB location - replace with actual studio address
+    const address = "Winnipeg, MB, Canada";
+    const encodedAddress = encodeURIComponent(address);
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
+    window.open(mapsUrl, '_blank');
+  };
+
+  // Function to open location in Google Maps
+  const openLocation = () => {
+    const address = "Winnipeg, MB, Canada";
+    const encodedAddress = encodeURIComponent(address);
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+    window.open(mapsUrl, '_blank');
+  };
 
   return (
     <footer className="bg-gray-900 bg-opacity-80 border-t border-gray-800">
@@ -118,7 +137,12 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-muted-coral mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300 font-medium text-sm sm:text-base">(204) 825-8526</p>
+                  <a 
+                    href="tel:+12048258526" 
+                    className="text-gray-300 hover:text-muted-coral font-medium text-sm sm:text-base transition-colors duration-300"
+                  >
+                    (204) 825-8526
+                  </a>
                   <p className="text-gray-400 text-xs sm:text-sm">Call for appointments</p>
                 </div>
               </div>
@@ -126,7 +150,12 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-golden-yellow mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300 font-medium text-sm sm:text-base">eihu335@gmail.com</p>
+                  <a 
+                    href="mailto:eihu335@gmail.com" 
+                    className="text-gray-300 hover:text-golden-yellow font-medium text-sm sm:text-base transition-colors duration-300"
+                  >
+                    eihu335@gmail.com
+                  </a>
                   <p className="text-gray-400 text-xs sm:text-sm">General inquiries</p>
                 </div>
               </div>
@@ -134,7 +163,15 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-muted-coral mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300 font-medium text-sm sm:text-base">@eminencehairco</p>
+                  <a 
+                    href="https://instagram.com/eminencehairco" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-300 hover:text-muted-coral font-medium text-sm sm:text-base transition-colors duration-300 flex items-center"
+                  >
+                    @eminencehairco
+                    <ExternalLink className="w-3 h-3 ml-1 opacity-60" />
+                  </a>
                   <p className="text-gray-400 text-xs sm:text-sm">Follow for updates</p>
                 </div>
               </div>
@@ -164,31 +201,59 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Map Section */}
+          {/* Interactive Map Section */}
           <div className="lg:col-span-1">
             <h3 className="text-lg sm:text-xl font-semibold text-warm-beige mb-4 sm:mb-6 flex items-center">
               <div className="w-1 h-4 sm:h-6 bg-muted-coral rounded-full mr-3"></div>
               Visit Our Studio
             </h3>
             
-            {/* Map Container */}
-            <div className="bg-gray-800 bg-opacity-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 border border-gray-700">
-              <div className="aspect-square bg-gradient-to-br from-muted-coral/20 to-golden-yellow/20 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
-                <div className="text-center">
-                  <MapPin className="w-8 h-8 sm:w-12 sm:h-12 text-muted-coral mx-auto mb-2 sm:mb-3" />
-                  <p className="text-warm-beige font-medium mb-1 sm:mb-2 text-sm sm:text-base">Professional Studio</p>
-                  <p className="text-gray-300 text-xs sm:text-sm">Convenient Location</p>
+            {/* Interactive Map Container */}
+            <div className="bg-gray-800 bg-opacity-50 rounded-xl overflow-hidden mb-4 sm:mb-6 border border-gray-700 hover:border-muted-coral transition-all duration-300 group">
+              {/* Map Iframe */}
+              <div className="aspect-square relative">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2569.8234567890123!2d-97.13906!3d49.895077!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDnCsDUzJzQyLjMiTiA5N8KwMDgnMjAuNiJX!5e0!3m2!1sen!2sca!4v1234567890123!5m2!1sen!2sca"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Eminence Hair Co. Location"
+                  className="transition-all duration-300 group-hover:brightness-110"
+                />
+                
+                {/* Map Overlay with Studio Info */}
+                <div className="absolute inset-0 bg-gradient-to-t from-soft-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                  <div className="p-3 sm:p-4 w-full">
+                    <div className="flex items-center text-warm-beige mb-2">
+                      <MapPin className="w-4 h-4 text-muted-coral mr-2" />
+                      <span className="font-medium text-sm">Professional Studio</span>
+                    </div>
+                    <p className="text-gray-300 text-xs">Winnipeg, MB</p>
+                  </div>
                 </div>
               </div>
+            </div>
+            
+            {/* Map Action Buttons */}
+            <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+              <button
+                onClick={openDirections}
+                className="w-full flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 sm:py-3 bg-muted-coral hover:bg-burnt-orange text-white rounded-lg transition-all duration-300 hover:scale-105 text-sm font-medium"
+              >
+                <Navigation className="w-4 h-4" />
+                <span>Get Directions</span>
+              </button>
               
-              <div className="text-center">
-                <p className="text-gray-300 text-xs sm:text-sm mb-2 sm:mb-3">
-                  Located in a clean, comfortable environment designed for your hair transformation experience.
-                </p>
-                <button className="text-muted-coral hover:text-burnt-orange font-medium text-xs sm:text-sm transition-colors duration-300">
-                  Get Directions →
-                </button>
-              </div>
+              <button
+                onClick={openLocation}
+                className="w-full flex items-center justify-center space-x-2 px-3 sm:px-4 py-2 sm:py-3 bg-gray-700 hover:bg-gray-600 text-warm-beige rounded-lg transition-all duration-300 hover:scale-105 text-sm font-medium"
+              >
+                <MapPin className="w-4 h-4" />
+                <span>View on Google Maps</span>
+              </button>
             </div>
 
             {/* Studio Features */}
@@ -204,6 +269,10 @@ const Footer = () => {
               <div className="flex items-center text-xs sm:text-sm text-gray-300">
                 <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-golden-yellow rounded-full mr-3"></div>
                 Easy Parking Available
+              </div>
+              <div className="flex items-center text-xs sm:text-sm text-gray-300">
+                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-muted-coral rounded-full mr-3"></div>
+                Convenient Location
               </div>
             </div>
           </div>
