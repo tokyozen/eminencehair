@@ -39,7 +39,7 @@ const Footer = () => {
 
   // Function to open Google Maps with directions to Lanham, MD
   const openDirections = () => {
-    const address = "Lanham, MD, USA";
+    const address = "Lanham, MD 20706, USA";
     const encodedAddress = encodeURIComponent(address);
     const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
     window.open(mapsUrl, '_blank');
@@ -47,7 +47,7 @@ const Footer = () => {
 
   // Function to open location in Google Maps
   const openLocation = () => {
-    const address = "Lanham, MD, USA";
+    const address = "Lanham, MD 20706, USA";
     const encodedAddress = encodeURIComponent(address);
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
     window.open(mapsUrl, '_blank');
@@ -209,10 +209,10 @@ const Footer = () => {
             
             {/* Interactive Map Container */}
             <div className="bg-gray-800 bg-opacity-50 rounded-xl overflow-hidden mb-4 sm:mb-6 border border-gray-700 hover:border-muted-coral transition-all duration-300 group">
-              {/* Map Iframe - Updated for Lanham, MD */}
+              {/* Map Iframe - Updated for Lanham, MD with working embed URL */}
               <div className="aspect-square relative">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d49449.35657479!2d-76.8631!3d38.9684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7c6de5af6e45b%3A0xc2524522d4885d2a!2sLanham%2C%20MD%2C%20USA!5e0!3m2!1sen!2sus!4v1640995200000!5m2!1sen!2sus"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d99013.30321095!2d-76.86310000000001!3d38.9684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89b7c6de5af6e45b%3A0xc2524522d4885d2a!2sLanham%2C%20MD%2020706%2C%20USA!5e0!3m2!1sen!2sus!4v1703875200000!5m2!1sen!2sus"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -230,7 +230,7 @@ const Footer = () => {
                       <MapPin className="w-4 h-4 text-muted-coral mr-2" />
                       <span className="font-medium text-sm">Professional Studio</span>
                     </div>
-                    <p className="text-gray-300 text-xs">Lanham, MD</p>
+                    <p className="text-gray-300 text-xs">Lanham, MD 20706</p>
                   </div>
                 </div>
               </div>
