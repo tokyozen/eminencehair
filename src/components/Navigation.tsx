@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +55,13 @@ const Navigation = () => {
             >
               Book Now
             </Link>
+            <Link
+              to="/login"
+              className="flex items-center space-x-2 text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10"
+            >
+              <User className="w-4 h-4" />
+              <span className="text-sm font-medium">Login</span>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -92,6 +99,14 @@ const Navigation = () => {
                 className="block w-full text-center btn-primary mt-4"
               >
                 Book Now
+              </Link>
+              <Link
+                to="/login"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center space-x-2 w-full text-center text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10 mt-2"
+              >
+                <User className="w-4 h-4" />
+                <span>Login</span>
               </Link>
             </div>
           </div>
