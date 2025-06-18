@@ -1,11 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Crown, Heart, Star, Mail, Gift, Scissors, Clock, DollarSign, Quote } from 'lucide-react';
+import { Sparkles, Crown, Heart, Star, Mail, Gift, Scissors, Clock, DollarSign, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 import BookingForm from '../components/BookingForm';
 
 const Home = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroSlides = [
+    {
+      id: 1,
+      image: 'https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg',
+      title: 'Eminence Hair Co.',
+      subtitle: 'High-quality wigs and bundles that look natural and feel soft. Transform your look with our premium human hair and expert customization.',
+      primaryCTA: 'Shop Collection',
+      secondaryCTA: 'Book Appointment',
+      primaryLink: '/collection',
+      secondaryLink: '/book'
+    },
+    {
+      id: 2,
+      image: 'https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg',
+      title: 'Expert Customization',
+      subtitle: 'Professional bleaching, plucking, and styling services. Every wig is carefully prepared to be glueless-ready and perfectly fitted for you.',
+      primaryCTA: 'View Services',
+      secondaryCTA: 'Learn More',
+      primaryLink: '/services',
+      secondaryLink: '/about'
+    }
+  ];
+
+  // Auto-advance slides
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6000); // Change slide every 6 seconds
+
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
 
   const features = [
     {
@@ -69,40 +114,102 @@ const Home = () => {
 
   return (
     <div className="animate-fade-in">
-      {/* Hero Section */}
+      {/* Hero Slideshow Section */}
       <section className="relative py-20 sm:py-32 px-4 overflow-hidden min-h-screen flex items-center">
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url(https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg)'
-          }}
-        >
-          {/* Dark overlay for better text readability */}
-          <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
+        {/* Slideshow Container */}
+        <div className="absolute inset-0">
+          {heroSlides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: `url(${slide.image})`
+                }}
+              >
+                {/* Dark overlay for better text readability */}
+                <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
+              </div>
+              
+              {/* Gradient overlay for additional depth */}
+              <div className="absolute inset-0 bg-gradient-to-br from-muted-coral/10 via-transparent to-golden-yellow/10"></div>
+            </div>
+          ))}
         </div>
-        
-        {/* Gradient overlay for additional depth */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted-coral/10 via-transparent to-golden-yellow/10"></div>
-        
+
+        {/* Navigation Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 sm:left-8 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 sm:w-16 sm:h-16 bg-soft-black bg-opacity-50 hover:bg-opacity-70 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8 text-warm-beige group-hover:text-muted-coral transition-colors" />
+        </button>
+
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 sm:right-8 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 sm:w-16 sm:h-16 bg-soft-black bg-opacity-50 hover:bg-opacity-70 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 text-warm-beige group-hover:text-muted-coral transition-colors" />
+        </button>
+
+        {/* Slide Content */}
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="floating-animation">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-warm-beige animate-slide-up">
-              Eminence Hair Co.
+              {heroSlides[currentSlide].title}
             </h1>
           </div>
           <p className="text-lg sm:text-xl md:text-2xl text-warm-beige mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up drop-shadow-lg">
-            High-quality wigs and bundles that look natural and feel soft. 
-            Transform your look with our premium human hair and expert customization.
+            {heroSlides[currentSlide].subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-slide-up">
-            <Link to="/collection" className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-2xl">
-              Shop Collection
+            <Link 
+              to={heroSlides[currentSlide].primaryLink} 
+              className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-2xl"
+            >
+              {heroSlides[currentSlide].primaryCTA}
             </Link>
-            <Link to="/book" className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-2xl">
-              Book Appointment
+            <Link 
+              to={heroSlides[currentSlide].secondaryLink} 
+              className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-2xl"
+            >
+              {heroSlides[currentSlide].secondaryCTA}
             </Link>
           </div>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-8 sm:bottom-12 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? 'bg-muted-coral scale-125 shadow-lg'
+                  : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Slide Progress Bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-soft-black bg-opacity-30 z-10">
+          <div 
+            className="h-full bg-gradient-to-r from-muted-coral to-golden-yellow transition-all duration-6000 ease-linear"
+            style={{ 
+              width: `${((currentSlide + 1) / heroSlides.length) * 100}%`,
+              animation: 'slideProgress 6s linear infinite'
+            }}
+          />
         </div>
       </section>
 

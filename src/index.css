@@ -61,6 +61,11 @@
   }
 }
 
+@keyframes slideProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out;
 }
@@ -127,4 +132,24 @@
     gap: 2.5rem;
     grid-template-columns: repeat(4, 1fr);
   }
+}
+
+/* Slideshow specific styles */
+.slideshow-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-transition {
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+/* Progress bar animation */
+@keyframes progressBar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.progress-bar {
+  animation: progressBar 6s linear infinite;
 }
