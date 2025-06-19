@@ -1,9 +1,9 @@
 import emailjs from '@emailjs/browser';
 
 // EmailJS configuration
-const EMAILJS_SERVICE_ID = 'service_eminence';
-const EMAILJS_TEMPLATE_ID = 'template_booking';
-const EMAILJS_PUBLIC_KEY = 'your_public_key_here';
+const EMAILJS_SERVICE_ID = 'service_n0g4676';
+const EMAILJS_TEMPLATE_ID = 'template_e7fxwyc';
+const EMAILJS_PUBLIC_KEY = 'cgiZAqf_3nAX4xAPM';
 
 // Initialize EmailJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -34,7 +34,7 @@ export const sendBookingEmail = async (data: BookingEmailData): Promise<boolean>
   try {
     // Prepare email template parameters
     const templateParams = {
-      to_email: 'ahussein@kallmania.com',
+      to_email: 'bookings@eminenceextensions.com',
       from_name: data.customerName,
       from_email: data.customerEmail,
       customer_name: data.customerName,
@@ -92,7 +92,7 @@ export const sendContactEmail = async (data: ContactEmailData): Promise<boolean>
   try {
     // Prepare email template parameters
     const templateParams = {
-      to_email: 'ahussein@kallmania.com',
+      to_email: 'bookings@eminenceextensions.com',
       from_name: data.name,
       from_email: data.email,
       customer_name: data.name,
@@ -180,6 +180,6 @@ ${contactData.phone ? `Phone: ${contactData.phone}` : ''}
     `);
   }
 
-  const mailtoLink = `mailto:ahussein@kallmania.com?subject=${subject}&body=${body}`;
+  const mailtoLink = `mailto:bookings@eminenceextensions.com?subject=${subject}&body=${body}`;
   window.open(mailtoLink, '_blank');
 };
