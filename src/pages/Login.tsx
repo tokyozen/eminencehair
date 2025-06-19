@@ -21,11 +21,12 @@ const Login = () => {
   const navigate = useNavigate();
   const { user, customer, loading: authLoading } = useAuth();
 
-  // Redirect if already logged in
+  // Redirect if already logged in - but only after auth has finished loading
   useEffect(() => {
+    // Only redirect if auth is not loading and we have both user and customer
     if (!authLoading && user && customer) {
       console.log('User already logged in, redirecting to dashboard');
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     }
   }, [user, customer, authLoading, navigate]);
 
@@ -83,9 +84,9 @@ const Login = () => {
         
         setSuccess('Successfully signed in! Redirecting...');
         
-        // Wait for auth context to update, then redirect
+        // Wait a moment for auth context to update, then redirect
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/dashboard', { replace: true });
         }, 1500);
       } else {
         // Create new account
@@ -99,9 +100,9 @@ const Login = () => {
         
         setSuccess('Account created successfully! Redirecting...');
         
-        // Wait for auth context to update, then redirect
+        // Wait a moment for auth context to update, then redirect
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/dashboard', { replace: true });
         }, 1500);
       }
     } catch (err: any) {
@@ -135,13 +136,25 @@ const Login = () => {
     }
   ];
 
-  // Show loading while checking auth state
+  // Show loading while checking auth state - but only briefly
   if (authLoading) {
     return (
       <div className="min-h-screen bg-soft-black flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-muted-coral border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-warm-beige">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user is already logged in and auth is done loading, don't show the login form
+  if (!authLoading && user && customer) {
+    return (
+      <div className="min-h-screen bg-soft-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-muted-coral border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-warm-beige">Redirecting to dashboard...</p>
         </div>
       </div>
     );
