@@ -21,11 +21,10 @@ const Login = () => {
   const navigate = useNavigate();
   const { user, customer, loading: authLoading } = useAuth();
 
-  // Redirect if already logged in - but only after auth has finished loading
+  // Simple redirect logic - only redirect if we have both user and customer
   useEffect(() => {
-    // Only redirect if auth is not loading and we have both user and customer
     if (!authLoading && user && customer) {
-      console.log('User already logged in, redirecting to dashboard');
+      console.log('User authenticated, redirecting to dashboard');
       navigate('/dashboard', { replace: true });
     }
   }, [user, customer, authLoading, navigate]);
@@ -79,31 +78,25 @@ const Login = () => {
       if (isLogin) {
         // Sign in existing user
         console.log('Attempting to sign in user:', formData.email);
-        const { user: signedInUser } = await signIn(formData.email, formData.password);
-        console.log('User signed in successfully:', signedInUser?.email);
+        await signIn(formData.email, formData.password);
+        console.log('User signed in successfully');
         
         setSuccess('Successfully signed in! Redirecting...');
         
-        // Wait a moment for auth context to update, then redirect
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true });
-        }, 1500);
+        // The useEffect will handle the redirect when auth state updates
       } else {
         // Create new account
         console.log('Attempting to create new user:', formData.email);
-        const { user: newUser } = await signUp(formData.email, formData.password, {
+        await signUp(formData.email, formData.password, {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phone: formData.phone
         });
-        console.log('User created successfully:', newUser?.email);
+        console.log('User created successfully');
         
         setSuccess('Account created successfully! Redirecting...');
         
-        // Wait a moment for auth context to update, then redirect
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true });
-        }, 1500);
+        // The useEffect will handle the redirect when auth state updates
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
@@ -136,7 +129,7 @@ const Login = () => {
     }
   ];
 
-  // Show loading while checking auth state - but only briefly
+  // Show loading only while auth is initially loading
   if (authLoading) {
     return (
       <div className="min-h-screen bg-soft-black flex items-center justify-center">
@@ -148,8 +141,8 @@ const Login = () => {
     );
   }
 
-  // If user is already logged in and auth is done loading, don't show the login form
-  if (!authLoading && user && customer) {
+  // If already authenticated, show redirect message
+  if (user && customer) {
     return (
       <div className="min-h-screen bg-soft-black flex items-center justify-center">
         <div className="text-center">

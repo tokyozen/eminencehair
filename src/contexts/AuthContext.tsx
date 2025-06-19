@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const customerData = await getOrCreateCustomerData(user);
         setCustomer(customerData);
-        console.log('Customer data refreshed:', customerData);
+        console.log('Customer data refreshed:', customerData?.email);
       } catch (error) {
         console.error('Error refreshing customer data:', error);
         setCustomer(null);
@@ -39,24 +39,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    let mounted = true;
+
     // Get initial session
     const getInitialSession = async () => {
       try {
-        setLoading(true);
+        console.log('Getting initial session...');
         const currentUser = await getCurrentUser();
-        console.log('Initial user check:', currentUser?.email);
         
+        if (!mounted) return;
+        
+        console.log('Initial user check:', currentUser?.email || 'No user');
         setUser(currentUser);
         
         if (currentUser) {
           const customerData = await getOrCreateCustomerData(currentUser);
-          console.log('Initial customer data:', customerData);
-          setCustomer(customerData);
+          if (mounted) {
+            console.log('Initial customer data:', customerData?.email || 'No customer data');
+            setCustomer(customerData);
+          }
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
+        if (mounted) {
+          setUser(null);
+          setCustomer(null);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -65,28 +77,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
+        if (!mounted) return;
+        
+        console.log('Auth state changed:', event, session?.user?.email || 'No user');
         
         setUser(session?.user ?? null);
         
         if (session?.user) {
           try {
             const customerData = await getOrCreateCustomerData(session.user);
-            setCustomer(customerData);
-            console.log('Customer data loaded after auth change:', customerData);
+            if (mounted) {
+              setCustomer(customerData);
+              console.log('Customer data loaded after auth change:', customerData?.email || 'No customer data');
+            }
           } catch (error) {
             console.error('Error loading customer data:', error);
-            setCustomer(null);
+            if (mounted) {
+              setCustomer(null);
+            }
           }
         } else {
-          setCustomer(null);
+          if (mounted) {
+            setCustomer(null);
+          }
         }
         
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleSignOut = async () => {
