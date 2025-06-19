@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
-import { supabase, Customer, getOrCreateCustomerData, signOut as supabaseSignOut } from '../lib/supabase';
+import { User } from 'firebase/auth';
+import { auth, Customer, getOrCreateCustomerData, signOut as firebaseSignOut, onAuthStateChange } from '../lib/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -40,90 +40,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    let mounted = true;
-
-    const initializeAuth = async () => {
-      try {
-        console.log('Initializing auth...');
-        
-        // Get initial session
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-        }
-        
-        if (!mounted) return;
-        
-        const currentUser = session?.user || null;
-        console.log('Initial user check:', currentUser?.email || 'No user');
-        setUser(currentUser);
-        
-        if (currentUser) {
-          const customerData = await getOrCreateCustomerData(currentUser);
-          if (mounted) {
-            console.log('Initial customer data:', customerData?.email || 'No customer data');
-            setCustomer(customerData);
-          }
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-        if (mounted) {
-          setUser(null);
+    console.log('Setting up Firebase auth listener...');
+    
+    const unsubscribe = onAuthStateChange(async (firebaseUser) => {
+      console.log('Firebase auth state changed:', firebaseUser?.email || 'No user');
+      
+      setUser(firebaseUser);
+      
+      if (firebaseUser) {
+        // Get customer data when user signs in
+        try {
+          const customerData = await getOrCreateCustomerData(firebaseUser);
+          setCustomer(customerData);
+          console.log('Customer data loaded:', customerData?.email);
+        } catch (error) {
+          console.error('Error getting customer data:', error);
           setCustomer(null);
         }
-      } finally {
-        if (mounted) {
-          setLoading(false);
-          console.log('Auth initialization complete');
-        }
+      } else {
+        // Clear customer data when user signs out
+        setCustomer(null);
       }
-    };
-
-    initializeAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email || 'No user');
-        
-        if (!mounted) return;
-        
-        const currentUser = session?.user || null;
-        setUser(currentUser);
-        
-        if (currentUser) {
-          // Get customer data when user signs in
-          try {
-            const customerData = await getOrCreateCustomerData(currentUser);
-            if (mounted) {
-              setCustomer(customerData);
-            }
-          } catch (error) {
-            console.error('Error getting customer data:', error);
-            if (mounted) {
-              setCustomer(null);
-            }
-          }
-        } else {
-          // Clear customer data when user signs out
-          if (mounted) {
-            setCustomer(null);
-          }
-        }
-      }
-    );
+      
+      setLoading(false);
+    });
 
     return () => {
-      mounted = false;
-      subscription.unsubscribe();
+      console.log('Cleaning up Firebase auth listener');
+      unsubscribe();
     };
   }, []);
 
   const handleSignOut = async () => {
     try {
       console.log('Signing out...');
-      await supabaseSignOut();
+      await firebaseSignOut();
       setUser(null);
       setCustomer(null);
       console.log('Sign out complete');

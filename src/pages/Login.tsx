@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Phone, Calendar, Package, Heart, Star } from 'lucide-react';
-import { signIn, signUp } from '../lib/supabase';
+import { signIn, signUp } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
@@ -94,22 +94,33 @@ const Login = () => {
         });
         console.log('User created successfully');
         
-        setSuccess('Account created successfully! Please check your email to verify your account, then sign in.');
+        setSuccess('Account created successfully! You are now signed in.');
         
-        // Switch to login mode
-        setIsLogin(true);
-        setFormData({
-          ...formData,
-          password: '',
-          confirmPassword: '',
-          firstName: '',
-          lastName: '',
-          phone: ''
-        });
+        // User will be automatically signed in after account creation
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
-      setError(err.message || 'An error occurred during authentication');
+      
+      // Handle Firebase-specific errors
+      let errorMessage = 'An error occurred during authentication';
+      
+      if (err.code === 'auth/email-already-in-use') {
+        errorMessage = 'An account with this email already exists. Please sign in instead.';
+      } else if (err.code === 'auth/weak-password') {
+        errorMessage = 'Password is too weak. Please choose a stronger password.';
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (err.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email. Please create an account.';
+      } else if (err.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (err.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many failed attempts. Please try again later.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
