@@ -19,12 +19,12 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { user, customer, loading: authLoading } = useAuth();
+  const { user, customer, loading: authLoading, mockSignIn } = useAuth();
 
-  // Simple redirect logic - only redirect if we have both user and customer
+  // Redirect if already authenticated
   useEffect(() => {
     if (!authLoading && user && customer) {
-      console.log('User authenticated, redirecting to dashboard');
+      console.log('User already authenticated, redirecting to dashboard');
       navigate('/dashboard', { replace: true });
     }
   }, [user, customer, authLoading, navigate]);
@@ -78,12 +78,17 @@ const Login = () => {
       if (isLogin) {
         // Sign in existing user
         console.log('Attempting to sign in user:', formData.email);
-        await signIn(formData.email, formData.password);
-        console.log('User signed in successfully');
+        
+        // For development, use mock sign in
+        await mockSignIn(formData.email);
         
         setSuccess('Successfully signed in! Redirecting...');
         
-        // The useEffect will handle the redirect when auth state updates
+        // Redirect will happen via useEffect
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 1000);
+        
       } else {
         // Create new account
         console.log('Attempting to create new user:', formData.email);
@@ -94,9 +99,18 @@ const Login = () => {
         });
         console.log('User created successfully');
         
-        setSuccess('Account created successfully! Redirecting...');
+        setSuccess('Account created successfully! Please sign in.');
         
-        // The useEffect will handle the redirect when auth state updates
+        // Switch to login mode
+        setIsLogin(true);
+        setFormData({
+          ...formData,
+          password: '',
+          confirmPassword: '',
+          firstName: '',
+          lastName: '',
+          phone: ''
+        });
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
@@ -226,6 +240,14 @@ const Login = () => {
                   <p className="text-green-400 text-sm">{success}</p>
                 </div>
               )}
+
+              {/* Demo Notice */}
+              <div className="mb-6 p-4 bg-blue-600 bg-opacity-20 border border-blue-500 border-opacity-50 rounded-lg">
+                <p className="text-blue-400 text-sm">
+                  <strong>Demo Mode:</strong> Use any email and password to test the login functionality. 
+                  This will create a demo account with sample data.
+                </p>
+              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!isLogin && (

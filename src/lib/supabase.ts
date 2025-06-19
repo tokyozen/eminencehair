@@ -1,11 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Use placeholder values for development
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+console.log('Supabase config:', { 
+  url: supabaseUrl, 
+  hasKey: !!supabaseAnonKey,
+  keyLength: supabaseAnonKey.length 
+});
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -71,200 +74,215 @@ export interface WishlistItem {
   created_at: string;
 }
 
-// Authentication functions
+// Mock authentication functions for development
 export const signUp = async (email: string, password: string, userData: {
   firstName: string;
   lastName: string;
   phone: string;
 }) => {
-  const { data, error } = await supabase.auth.signUp({
+  console.log('Mock signUp called:', { email, userData });
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return mock user data
+  const mockUser = {
+    id: 'mock-user-id',
     email,
-    password,
-    options: {
-      data: {
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        phone: userData.phone,
-      }
+    user_metadata: {
+      first_name: userData.firstName,
+      last_name: userData.lastName,
+      phone: userData.phone,
     }
-  });
-
-  if (error) throw error;
-
-  // Create customer record with the user's ID
-  if (data.user) {
-    const { error: customerError } = await supabase
-      .from('customers')
-      .insert({
-        id: data.user.id,
-        email: data.user.email!,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        phone: userData.phone,
-      });
-
-    if (customerError) {
-      console.error('Error creating customer record:', customerError);
-      throw customerError;
-    }
-  }
-
-  return data;
+  };
+  
+  return { user: mockUser, session: null };
 };
 
 export const signIn = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
+  console.log('Mock signIn called:', { email });
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return mock user data
+  const mockUser = {
+    id: 'mock-user-id',
     email,
-    password,
-  });
-
-  if (error) throw error;
-  return data;
+    user_metadata: {
+      first_name: 'Demo',
+      last_name: 'User',
+      phone: '(204) 825-8526',
+    }
+  };
+  
+  return { user: mockUser, session: { user: mockUser } };
 };
 
 export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw error;
+  console.log('Mock signOut called');
+  await new Promise(resolve => setTimeout(resolve, 500));
 };
 
 export const getCurrentUser = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
-  return user;
+  console.log('Mock getCurrentUser called');
+  return null; // No user initially
 };
 
-// Customer data functions
+// Mock customer data functions
 export const getCustomerData = async (userId: string): Promise<Customer | null> => {
-  try {
-    const { data, error } = await supabase
-      .from('customers')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) {
-      console.error('Error fetching customer data:', error);
-      return null;
-    }
-    
-    return data;
-  } catch (error) {
-    console.error('Error in getCustomerData:', error);
-    return null;
-  }
+  console.log('Mock getCustomerData called:', userId);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Return mock customer data
+  return {
+    id: userId,
+    email: 'demo@example.com',
+    first_name: 'Demo',
+    last_name: 'User',
+    phone: '(204) 825-8526',
+    member_since: '2024-01-01T00:00:00Z',
+    total_orders: 5,
+    total_spent: 450.00,
+    loyalty_points: 45,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  };
 };
 
 export const getOrCreateCustomerData = async (user: any): Promise<Customer | null> => {
-  try {
-    // First try to get existing customer data
-    let customerData = await getCustomerData(user.id);
-    
-    if (!customerData) {
-      // If no customer record exists, create one
-      const { data, error } = await supabase
-        .from('customers')
-        .insert({
-          id: user.id,
-          email: user.email,
-          first_name: user.user_metadata?.first_name || 'Customer',
-          last_name: user.user_metadata?.last_name || '',
-          phone: user.user_metadata?.phone || null,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating customer record:', error);
-        return null;
-      }
-      
-      customerData = data;
-    }
-    
-    return customerData;
-  } catch (error) {
-    console.error('Error in getOrCreateCustomerData:', error);
-    return null;
-  }
+  console.log('Mock getOrCreateCustomerData called:', user?.email);
+  return await getCustomerData(user.id);
 };
 
 export const getCustomerAppointments = async (customerId: string): Promise<Appointment[]> => {
-  const { data, error } = await supabase
-    .from('appointments')
-    .select('*')
-    .eq('customer_id', customerId)
-    .order('appointment_date', { ascending: true });
-
-  if (error) throw error;
-  return data || [];
+  console.log('Mock getCustomerAppointments called:', customerId);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return [
+    {
+      id: 'apt-1',
+      customer_id: customerId,
+      service_name: 'Wig Install + Styling',
+      appointment_date: '2025-01-20',
+      appointment_time: '14:00',
+      status: 'confirmed',
+      price: 80.00,
+      duration: '3-4 hours',
+      notes: 'Bring wig for installation - Body Wave 22"',
+      created_at: '2024-01-01T00:00:00Z'
+    }
+  ];
 };
 
 export const getCustomerOrders = async (customerId: string): Promise<Order[]> => {
-  const { data, error } = await supabase
-    .from('orders')
-    .select(`
-      *,
-      order_items (*)
-    `)
-    .eq('customer_id', customerId)
-    .order('order_date', { ascending: false });
-
-  if (error) throw error;
-  return data || [];
+  console.log('Mock getCustomerOrders called:', customerId);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return [
+    {
+      id: 'order-1',
+      customer_id: customerId,
+      order_number: 'ORD-000001',
+      order_date: '2024-12-10T00:00:00Z',
+      total_amount: 383.00,
+      status: 'delivered',
+      tracking_number: 'TRK123456789',
+      created_at: '2024-12-10T00:00:00Z',
+      order_items: [
+        {
+          id: 'item-1',
+          order_id: 'order-1',
+          product_name: '13x6 HD Lace Body Wave Wig',
+          product_length: '22"',
+          price: 328.00,
+          quantity: 1
+        }
+      ]
+    }
+  ];
 };
 
 export const getCustomerWishlist = async (customerId: string): Promise<WishlistItem[]> => {
-  const { data, error } = await supabase
-    .from('wishlist_items')
-    .select('*')
-    .eq('customer_id', customerId)
-    .order('created_at', { ascending: false });
-
-  if (error) throw error;
-  return data || [];
+  console.log('Mock getCustomerWishlist called:', customerId);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return [
+    {
+      id: 'wish-1',
+      customer_id: customerId,
+      product_name: '13x6 HD Lace Deep Wave Wig',
+      product_length: '26"',
+      price: 383.00,
+      image_url: 'https://eminenceextensions.com/old/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg',
+      in_stock: true,
+      created_at: '2024-01-01T00:00:00Z'
+    }
+  ];
 };
 
-// Booking functions
+// Mock booking functions
 export const createAppointment = async (appointmentData: Omit<Appointment, 'id' | 'created_at'>) => {
-  const { data, error } = await supabase
-    .from('appointments')
-    .insert(appointmentData)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
+  console.log('Mock createAppointment called:', appointmentData);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  return {
+    id: 'new-apt-' + Date.now(),
+    ...appointmentData,
+    created_at: new Date().toISOString()
+  };
 };
 
-// Wishlist functions
+// Mock wishlist functions
 export const addToWishlist = async (wishlistData: Omit<WishlistItem, 'id' | 'created_at'>) => {
-  const { data, error } = await supabase
-    .from('wishlist_items')
-    .insert(wishlistData)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
+  console.log('Mock addToWishlist called:', wishlistData);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return {
+    id: 'new-wish-' + Date.now(),
+    ...wishlistData,
+    created_at: new Date().toISOString()
+  };
 };
 
 export const removeFromWishlist = async (itemId: string) => {
-  const { error } = await supabase
-    .from('wishlist_items')
-    .delete()
-    .eq('id', itemId);
-
-  if (error) throw error;
+  console.log('Mock removeFromWishlist called:', itemId);
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
 };
 
-// Update customer profile
+// Mock update customer profile
 export const updateCustomerProfile = async (customerId: string, updates: Partial<Customer>) => {
-  const { data, error } = await supabase
-    .from('customers')
-    .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq('id', customerId)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
+  console.log('Mock updateCustomerProfile called:', { customerId, updates });
+  
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  return {
+    id: customerId,
+    email: 'demo@example.com',
+    first_name: 'Demo',
+    last_name: 'User',
+    phone: '(204) 825-8526',
+    member_since: '2024-01-01T00:00:00Z',
+    total_orders: 5,
+    total_spent: 450.00,
+    loyalty_points: 45,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: new Date().toISOString(),
+    ...updates
+  };
 };
