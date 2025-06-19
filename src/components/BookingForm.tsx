@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, User, Phone, Mail } from 'lucide-react';
+import { Calendar, Clock, User, Phone, Mail, CheckCircle } from 'lucide-react';
 
 interface BookingFormProps {
   title?: string;
@@ -19,6 +19,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
     time: '',
     message: ''
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const services = [
     'Wig Install (No Styling) - $75',
@@ -35,17 +36,45 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    alert('Booking request submitted! We\'ll contact you shortly to confirm your appointment.');
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service: '',
-      date: '',
-      time: '',
-      message: ''
-    });
+    
+    // Create mailto link with form data
+    const subject = encodeURIComponent(`Appointment Request - ${formData.service}`);
+    const body = encodeURIComponent(`
+Hello,
+
+I would like to schedule an appointment with the following details:
+
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Service: ${formData.service}
+Preferred Date: ${formData.date}
+Preferred Time: ${formData.time}
+
+Additional Notes:
+${formData.message}
+
+Thank you!
+    `);
+    
+    const mailtoLink = `mailto:eihu335@gmail.com?subject=${subject}&body=${body}`;
+    window.open(mailtoLink, '_blank');
+    
+    setIsSubmitted(true);
+    
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        service: '',
+        date: '',
+        time: '',
+        message: ''
+      });
+    }, 3000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -54,6 +83,32 @@ const BookingForm: React.FC<BookingFormProps> = ({
       [e.target.name]: e.target.value
     });
   };
+
+  if (isSubmitted) {
+    return (
+      <section className="py-12 sm:py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="card max-w-2xl mx-auto animate-fade-in text-center bg-gradient-to-br from-green-600/10 to-muted-coral/10 border-2 border-green-500 border-opacity-30">
+            <div className="mb-6">
+              <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-warm-beige mb-4">Request Sent Successfully!</h2>
+              <p className="text-gray-300 mb-6">
+                Your appointment request has been sent via email. We'll get back to you within 24 hours to confirm your booking.
+              </p>
+              <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-4 border border-golden-yellow border-opacity-30">
+                <p className="text-golden-yellow text-sm">
+                  <strong>What's Next?</strong><br />
+                  • We'll review your request and confirm availability<br />
+                  • You'll receive a confirmation email with appointment details<br />
+                  • Remember to drop off your wig 3-5 days before your appointment
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 sm:py-16 px-4">
@@ -190,7 +245,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               type="submit"
               className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
             >
-              Submit Booking Request
+              Send Appointment Request
             </button>
           </form>
 
@@ -198,6 +253,15 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <p className="text-xs sm:text-sm text-golden-yellow font-medium">
               <strong>Important:</strong> Please read our booking policies before submitting. 
               We require 24-hour advance notice for rescheduling and have specific requirements for wig drop-offs.
+            </p>
+          </div>
+
+          <div className="mt-4 text-center">
+            <p className="text-gray-400 text-sm">
+              Prefer to call? Contact us directly at{' '}
+              <a href="tel:+12048258526" className="text-muted-coral hover:text-burnt-orange font-medium">
+                (204) 825-8526
+              </a>
             </p>
           </div>
         </div>

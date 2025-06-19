@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Clock, DollarSign, CheckCircle, Star, Heart, Crown, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, DollarSign, CheckCircle, Star, Heart, Crown, Plus, Minus, Phone, Mail, MessageCircle } from 'lucide-react';
 
 const BookNow = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -8,6 +8,13 @@ const BookNow = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const serviceCategories = [
     {
@@ -154,11 +161,17 @@ const BookNow = () => {
       setSelectedService(null);
     } else if (currentStep === 4) {
       setCurrentStep(3);
+    } else if (currentStep === 5) {
+      setCurrentStep(4);
     }
   };
 
   const handleContinueToDateTime = () => {
     setCurrentStep(4);
+  };
+
+  const handleContinueToContact = () => {
+    setCurrentStep(5);
   };
 
   const getCurrentService = () => {
@@ -203,6 +216,97 @@ const BookNow = () => {
     today.setHours(0, 0, 0, 0);
     return date >= today && date.getDay() !== 0; // Not Sunday
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleFinalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const currentService = getCurrentService();
+    const selectedAddOnsList = getSelectedAddOns();
+    
+    // Create detailed booking summary
+    let serviceDetails = `Service: ${currentService?.name} - $${currentService?.price}\n`;
+    if (selectedAddOnsList.length > 0) {
+      serviceDetails += '\nAdd-ons:\n';
+      selectedAddOnsList.forEach(addon => {
+        serviceDetails += `• ${addon.name} - $${addon.price}\n`;
+      });
+    }
+    serviceDetails += `\nTotal: $${getTotalPrice()}`;
+    
+    // Create mailto link with complete booking details
+    const subject = encodeURIComponent(`Appointment Booking Request - ${currentService?.name}`);
+    const body = encodeURIComponent(`
+Hello,
+
+I would like to book an appointment with the following details:
+
+CUSTOMER INFORMATION:
+Name: ${formData.name}
+Email: ${formData.email}
+Phone: ${formData.phone}
+
+APPOINTMENT DETAILS:
+${serviceDetails}
+Preferred Date: ${new Date(selectedDate).toLocaleDateString()}
+Preferred Time: ${selectedTime}
+
+ADDITIONAL NOTES:
+${formData.message}
+
+Please confirm availability and provide any additional instructions.
+
+Thank you!
+    `);
+    
+    const mailtoLink = `mailto:eihu335@gmail.com?subject=${subject}&body=${body}`;
+    window.open(mailtoLink, '_blank');
+    
+    setIsSubmitted(true);
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-soft-black flex items-center justify-center px-4">
+        <div className="card max-w-2xl mx-auto text-center bg-gradient-to-br from-green-600/10 to-muted-coral/10 border-2 border-green-500 border-opacity-30">
+          <CheckCircle className="w-20 h-20 text-green-400 mx-auto mb-6" />
+          <h1 className="text-3xl font-bold text-warm-beige mb-4">Booking Request Sent!</h1>
+          <p className="text-lg text-gray-300 mb-6">
+            Your detailed appointment request has been sent via email. We'll review your request and get back to you within 24 hours to confirm your booking.
+          </p>
+          
+          <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-6 border border-golden-yellow border-opacity-30 mb-6">
+            <h3 className="text-golden-yellow font-semibold mb-3">What happens next?</h3>
+            <ul className="text-left text-golden-yellow text-sm space-y-2">
+              <li>• We'll review your request and check availability</li>
+              <li>• You'll receive a confirmation email with appointment details</li>
+              <li>• We'll provide wig drop-off instructions (3-5 days before appointment)</li>
+              <li>• Any questions will be addressed before your appointment</li>
+            </ul>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="tel:+12048258526" className="btn-primary">
+              <Phone className="w-4 h-4 mr-2" />
+              Call Us
+            </a>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn-secondary"
+            >
+              Book Another Appointment
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-soft-black">
@@ -254,6 +358,12 @@ const BookNow = () => {
                 currentStep >= 4 ? 'bg-muted-coral text-white' : 'bg-gray-700 text-gray-400'
               }`}>
                 4
+              </div>
+              <div className={`w-8 sm:w-16 h-1 ${currentStep >= 5 ? 'bg-muted-coral' : 'bg-gray-700'}`}></div>
+              <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base ${
+                currentStep >= 5 ? 'bg-muted-coral text-white' : 'bg-gray-700 text-gray-400'
+              }`}>
+                5
               </div>
             </div>
           </div>
@@ -336,7 +446,7 @@ const BookNow = () => {
                         </h3>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-sm text-gray-400 mb-3 space-y-1 sm:space-y-0">
                           <div className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
+                            <Clock className="w-4 h-4 mr-2" />
                             {service.duration}
                           </div>
                           <div className="flex items-center text-muted-coral font-semibold">
@@ -474,7 +584,7 @@ const BookNow = () => {
                 {/* Calendar */}
                 <div className="card">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-semibold text-warm-beige">June 2025</h3>
+                    <h3 className="text-lg font-semibold text-warm-beige">January 2025</h3>
                     <div className="flex space-x-2">
                       <button className="p-2 rounded-lg bg-gray-700 hover:bg-gray-600 transition-colors">
                         <ArrowLeft className="w-4 h-4 text-warm-beige" />
@@ -521,7 +631,7 @@ const BookNow = () => {
                   </div>
 
                   <div className="mt-4 text-xs text-gray-400 text-center">
-                    TIME ZONE: EASTERN TIME (GMT-04:00)
+                    TIME ZONE: EASTERN TIME (GMT-05:00)
                   </div>
                 </div>
 
@@ -551,39 +661,14 @@ const BookNow = () => {
                     </div>
                   )}
 
-                  {/* Booking Summary */}
+                  {/* Continue Button */}
                   {selectedDate && selectedTime && (
-                    <div className="mt-8 p-4 bg-gradient-to-br from-golden-yellow/10 to-muted-coral/10 rounded-lg border border-golden-yellow border-opacity-30">
-                      <h4 className="font-semibold text-warm-beige mb-3">Booking Summary</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-gray-300">Service:</span>
-                          <span className="text-warm-beige">{getCurrentService()?.name}</span>
-                        </div>
-                        {getSelectedAddOns().map((addon) => (
-                          <div key={addon.id} className="flex justify-between">
-                            <span className="text-gray-300">+ {addon.name}:</span>
-                            <span className="text-warm-beige">${addon.price}</span>
-                          </div>
-                        ))}
-                        <div className="flex justify-between">
-                          <span className="text-gray-300">Date:</span>
-                          <span className="text-warm-beige">{new Date(selectedDate).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-300">Time:</span>
-                          <span className="text-warm-beige">{selectedTime}</span>
-                        </div>
-                        <div className="border-t border-gray-600 pt-2 mt-3">
-                          <div className="flex justify-between font-bold">
-                            <span className="text-warm-beige">Total:</span>
-                            <span className="text-muted-coral text-lg">${getTotalPrice()}.00</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <button className="w-full btn-primary mt-4">
-                        Complete Booking
+                    <div className="mt-8">
+                      <button
+                        onClick={handleContinueToContact}
+                        className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
+                      >
+                        Continue to Contact Info
                       </button>
                     </div>
                   )}
@@ -591,13 +676,182 @@ const BookNow = () => {
               </div>
             </div>
           )}
+
+          {/* Step 5: Contact Information */}
+          {currentStep === 5 && (
+            <div className="animate-fade-in">
+              <div className="flex items-center mb-6 sm:mb-8">
+                <button
+                  onClick={handleBack}
+                  className="mr-3 sm:mr-4 p-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-warm-beige" />
+                </button>
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-warm-beige mb-1 sm:mb-2">Contact Information</h2>
+                  <p className="text-muted-coral font-medium text-sm sm:text-base">
+                    Almost done! Please provide your contact details
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-8">
+                {/* Contact Form */}
+                <div className="card">
+                  <form onSubmit={handleFinalSubmit} className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-warm-beige">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className="input-field"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-warm-beige">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="input-field"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-warm-beige">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                        className="input-field"
+                        placeholder="(204) 825-8526"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-warm-beige">
+                        Additional Notes
+                      </label>
+                      <textarea
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        rows={4}
+                        className="input-field resize-none"
+                        placeholder="Any special requests or questions?"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
+                    >
+                      Send Booking Request
+                    </button>
+                  </form>
+                </div>
+
+                {/* Booking Summary */}
+                <div className="card bg-gradient-to-br from-muted-coral/10 to-golden-yellow/10 border-2 border-muted-coral border-opacity-30">
+                  <h3 className="text-xl font-semibold text-warm-beige mb-6">Booking Summary</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="border-b border-gray-700 pb-4">
+                      <h4 className="font-semibold text-warm-beige mb-2">Service</h4>
+                      <p className="text-gray-300">{getCurrentService()?.name}</p>
+                      <p className="text-muted-coral font-bold">${getCurrentService()?.price}.00</p>
+                    </div>
+
+                    {getSelectedAddOns().length > 0 && (
+                      <div className="border-b border-gray-700 pb-4">
+                        <h4 className="font-semibold text-warm-beige mb-2">Add-ons</h4>
+                        {getSelectedAddOns().map((addon) => (
+                          <div key={addon.id} className="flex justify-between items-center mb-1">
+                            <span className="text-gray-300 text-sm">{addon.name}</span>
+                            <span className="text-muted-coral font-semibold">${addon.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="border-b border-gray-700 pb-4">
+                      <h4 className="font-semibold text-warm-beige mb-2">Date & Time</h4>
+                      <p className="text-gray-300">{new Date(selectedDate).toLocaleDateString()}</p>
+                      <p className="text-gray-300">{selectedTime}</p>
+                    </div>
+
+                    <div className="pt-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xl font-bold text-warm-beige">Total</span>
+                        <span className="text-2xl font-bold text-muted-coral">${getTotalPrice()}.00</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 bg-golden-yellow bg-opacity-10 rounded-lg p-4 border border-golden-yellow border-opacity-30">
+                    <p className="text-golden-yellow text-sm">
+                      <strong>Important:</strong> This is a booking request. We'll confirm availability and send you detailed instructions including wig drop-off requirements.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Powered by Footer */}
-      <div className="text-center py-6 sm:py-8 border-t border-gray-800">
-        <p className="text-gray-400 text-xs sm:text-sm mb-2">Powered by</p>
-        <p className="text-warm-beige font-semibold text-sm sm:text-base">Eminence Hair Co. Booking System</p>
+      {/* Contact Options */}
+      <div className="bg-gray-900 bg-opacity-50 py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-6">
+            <h3 className="text-xl font-semibold text-warm-beige mb-2">Prefer to Book Directly?</h3>
+            <p className="text-gray-300">Contact us using any of these methods</p>
+          </div>
+          
+          <div className="grid sm:grid-cols-3 gap-4">
+            <a 
+              href="tel:+12048258526"
+              className="flex items-center justify-center space-x-2 p-4 bg-gray-800 bg-opacity-50 rounded-lg hover:bg-muted-coral hover:bg-opacity-20 transition-all duration-300"
+            >
+              <Phone className="w-5 h-5 text-muted-coral" />
+              <span className="text-warm-beige font-medium">Call Us</span>
+            </a>
+            
+            <a 
+              href="mailto:eihu335@gmail.com"
+              className="flex items-center justify-center space-x-2 p-4 bg-gray-800 bg-opacity-50 rounded-lg hover:bg-golden-yellow hover:bg-opacity-20 transition-all duration-300"
+            >
+              <Mail className="w-5 h-5 text-golden-yellow" />
+              <span className="text-warm-beige font-medium">Email Us</span>
+            </a>
+            
+            <a 
+              href="https://instagram.com/eminencehairco"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center space-x-2 p-4 bg-gray-800 bg-opacity-50 rounded-lg hover:bg-muted-coral hover:bg-opacity-20 transition-all duration-300"
+            >
+              <MessageCircle className="w-5 h-5 text-muted-coral" />
+              <span className="text-warm-beige font-medium">DM Us</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );

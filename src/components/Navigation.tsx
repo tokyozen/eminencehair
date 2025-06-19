@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User, LogOut } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { Menu, X } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { user, customer, signOut } = useAuth();
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -17,15 +15,6 @@ const Navigation = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      setIsOpen(false);
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
 
   return (
     <nav className="sticky top-0 z-50 bg-soft-black bg-opacity-20 backdrop-blur-md border-b border-white border-opacity-10">
@@ -66,46 +55,6 @@ const Navigation = () => {
             >
               Book Now
             </Link>
-            
-            {/* User Menu */}
-            {user && customer ? (
-              <div className="relative group">
-                <Link
-                  to="/dashboard"
-                  className="flex items-center space-x-2 text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10"
-                >
-                  <User className="w-4 h-4" />
-                  <span className="text-sm font-medium">{customer.first_name}</span>
-                </Link>
-                
-                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-gray-800 bg-opacity-95 backdrop-blur-sm rounded-lg shadow-xl border border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-                  <div className="py-2">
-                    <Link
-                      to="/dashboard"
-                      className="block px-4 py-2 text-sm text-warm-beige hover:bg-muted-coral hover:bg-opacity-20 transition-colors"
-                    >
-                      Dashboard
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full text-left px-4 py-2 text-sm text-warm-beige hover:bg-muted-coral hover:bg-opacity-20 transition-colors flex items-center"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="flex items-center space-x-2 text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10"
-              >
-                <User className="w-4 h-4" />
-                <span className="text-sm font-medium">Login</span>
-              </Link>
-            )}
           </div>
 
           {/* Mobile menu button */}
@@ -144,36 +93,6 @@ const Navigation = () => {
               >
                 Book Now
               </Link>
-              
-              {/* Mobile User Menu */}
-              {user && customer ? (
-                <>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center justify-center space-x-2 w-full text-center text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10 mt-2"
-                  >
-                    <User className="w-4 h-4" />
-                    <span>Dashboard ({customer.first_name})</span>
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center justify-center space-x-2 w-full text-center text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Sign Out</span>
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center space-x-2 w-full text-center text-warm-beige hover:text-muted-coral transition-colors duration-300 px-3 py-2 rounded-lg hover:bg-muted-coral hover:bg-opacity-10 mt-2"
-                >
-                  <User className="w-4 h-4" />
-                  <span>Login</span>
-                </Link>
-              )}
             </div>
           </div>
         )}
