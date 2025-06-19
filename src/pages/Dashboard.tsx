@@ -42,15 +42,13 @@ const Dashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasRedirected, setHasRedirected] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log('Dashboard useEffect - Auth state:', { 
       authLoading, 
       user: user?.email, 
-      customer: customer?.email,
-      hasRedirected 
+      customer: customer?.email
     });
 
     // Don't do anything while auth is still loading
@@ -59,10 +57,9 @@ const Dashboard = () => {
       return;
     }
 
-    // If no user and we haven't redirected yet, redirect to login
-    if (!user && !hasRedirected) {
+    // If no user, redirect to login
+    if (!user) {
       console.log('No user found, redirecting to login');
-      setHasRedirected(true);
       navigate('/login', { replace: true });
       return;
     }
@@ -86,7 +83,7 @@ const Dashboard = () => {
       console.log('Both user and customer available, loading dashboard data');
       loadDashboardData();
     }
-  }, [user, customer, authLoading, navigate, hasRedirected]);
+  }, [user, customer, authLoading, navigate]);
 
   const loadDashboardData = async () => {
     if (!customer) {

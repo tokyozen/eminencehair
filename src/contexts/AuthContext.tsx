@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { getCurrentUser, Customer, getOrCreateCustomerData, signOut as supabaseSignOut } from '../lib/supabase';
+import { supabase, Customer, getOrCreateCustomerData, signOut as supabaseSignOut } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -8,7 +8,6 @@ interface AuthContextType {
   loading: boolean;
   signOut: () => Promise<void>;
   refreshCustomerData: () => Promise<void>;
-  mockSignIn: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -40,29 +39,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Mock sign in function for development
-  const mockSignIn = async (email: string) => {
-    console.log('Mock sign in for:', email);
-    
-    const mockUser = {
-      id: 'mock-user-id',
-      email,
-      user_metadata: {
-        first_name: 'Demo',
-        last_name: 'User',
-        phone: '(204) 825-8526',
-      }
-    } as User;
-    
-    setUser(mockUser);
-    
-    // Get customer data
-    const customerData = await getOrCreateCustomerData(mockUser);
-    setCustomer(customerData);
-    
-    console.log('Mock sign in complete:', { user: mockUser.email, customer: customerData?.email });
-  };
-
   useEffect(() => {
     let mounted = true;
 
@@ -70,11 +46,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         console.log('Initializing auth...');
         
-        // For development, start with no user
-        const currentUser = await getCurrentUser();
+        // Get initial session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+        }
         
         if (!mounted) return;
         
+        const currentUser = session?.user || null;
         console.log('Initial user check:', currentUser?.email || 'No user');
         setUser(currentUser);
         
@@ -101,8 +82,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     initializeAuth();
 
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email || 'No user');
+        
+        if (!mounted) return;
+        
+        const currentUser = session?.user || null;
+        setUser(currentUser);
+        
+        if (currentUser) {
+          // Get customer data when user signs in
+          try {
+            const customerData = await getOrCreateCustomerData(currentUser);
+            if (mounted) {
+              setCustomer(customerData);
+            }
+          } catch (error) {
+            console.error('Error getting customer data:', error);
+            if (mounted) {
+              setCustomer(null);
+            }
+          }
+        } else {
+          // Clear customer data when user signs out
+          if (mounted) {
+            setCustomer(null);
+          }
+        }
+      }
+    );
+
     return () => {
       mounted = false;
+      subscription.unsubscribe();
     };
   }, []);
 
@@ -124,7 +138,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     signOut: handleSignOut,
     refreshCustomerData,
-    mockSignIn,
   };
 
   return (

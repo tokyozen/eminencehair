@@ -19,7 +19,7 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { user, customer, loading: authLoading, mockSignIn } = useAuth();
+  const { user, customer, loading: authLoading } = useAuth();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -78,16 +78,11 @@ const Login = () => {
       if (isLogin) {
         // Sign in existing user
         console.log('Attempting to sign in user:', formData.email);
-        
-        // For development, use mock sign in
-        await mockSignIn(formData.email);
+        await signIn(formData.email, formData.password);
         
         setSuccess('Successfully signed in! Redirecting...');
         
-        // Redirect will happen via useEffect
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true });
-        }, 1000);
+        // Redirect will happen via useEffect when auth state changes
         
       } else {
         // Create new account
@@ -99,7 +94,7 @@ const Login = () => {
         });
         console.log('User created successfully');
         
-        setSuccess('Account created successfully! Please sign in.');
+        setSuccess('Account created successfully! Please check your email to verify your account, then sign in.');
         
         // Switch to login mode
         setIsLogin(true);
@@ -240,14 +235,6 @@ const Login = () => {
                   <p className="text-green-400 text-sm">{success}</p>
                 </div>
               )}
-
-              {/* Demo Notice */}
-              <div className="mb-6 p-4 bg-blue-600 bg-opacity-20 border border-blue-500 border-opacity-50 rounded-lg">
-                <p className="text-blue-400 text-sm">
-                  <strong>Demo Mode:</strong> Use any email and password to test the login functionality. 
-                  This will create a demo account with sample data.
-                </p>
-              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!isLogin && (

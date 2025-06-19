@@ -1,14 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Use placeholder values for development
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-console.log('Supabase config:', { 
-  url: supabaseUrl, 
-  hasKey: !!supabaseAnonKey,
-  keyLength: supabaseAnonKey.length 
-});
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -74,215 +71,291 @@ export interface WishlistItem {
   created_at: string;
 }
 
-// Mock authentication functions for development
+// Authentication functions
 export const signUp = async (email: string, password: string, userData: {
   firstName: string;
   lastName: string;
   phone: string;
 }) => {
-  console.log('Mock signUp called:', { email, userData });
+  console.log('Creating new user account:', email);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return mock user data
-  const mockUser = {
-    id: 'mock-user-id',
+  const { data, error } = await supabase.auth.signUp({
     email,
-    user_metadata: {
-      first_name: userData.firstName,
-      last_name: userData.lastName,
-      phone: userData.phone,
+    password,
+    options: {
+      data: {
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        phone: userData.phone,
+      }
     }
-  };
-  
-  return { user: mockUser, session: null };
+  });
+
+  if (error) {
+    console.error('Sign up error:', error);
+    throw error;
+  }
+
+  // Create customer record
+  if (data.user) {
+    const { error: customerError } = await supabase
+      .from('customers')
+      .insert({
+        id: data.user.id,
+        email: data.user.email!,
+        first_name: userData.firstName,
+        last_name: userData.lastName,
+        phone: userData.phone,
+      });
+
+    if (customerError) {
+      console.error('Error creating customer record:', customerError);
+      throw customerError;
+    }
+  }
+
+  return data;
 };
 
 export const signIn = async (email: string, password: string) => {
-  console.log('Mock signIn called:', { email });
+  console.log('Signing in user:', email);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return mock user data
-  const mockUser = {
-    id: 'mock-user-id',
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
-    user_metadata: {
-      first_name: 'Demo',
-      last_name: 'User',
-      phone: '(204) 825-8526',
-    }
-  };
-  
-  return { user: mockUser, session: { user: mockUser } };
+    password,
+  });
+
+  if (error) {
+    console.error('Sign in error:', error);
+    throw error;
+  }
+
+  return data;
 };
 
 export const signOut = async () => {
-  console.log('Mock signOut called');
-  await new Promise(resolve => setTimeout(resolve, 500));
+  console.log('Signing out user');
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error('Sign out error:', error);
+    throw error;
+  }
 };
 
 export const getCurrentUser = async () => {
-  console.log('Mock getCurrentUser called');
-  return null; // No user initially
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error) {
+    console.error('Get user error:', error);
+    return null;
+  }
+  return user;
 };
 
-// Mock customer data functions
+// Customer data functions
 export const getCustomerData = async (userId: string): Promise<Customer | null> => {
-  console.log('Mock getCustomerData called:', userId);
+  console.log('Fetching customer data for user:', userId);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  // Return mock customer data
-  return {
-    id: userId,
-    email: 'demo@example.com',
-    first_name: 'Demo',
-    last_name: 'User',
-    phone: '(204) 825-8526',
-    member_since: '2024-01-01T00:00:00Z',
-    total_orders: 5,
-    total_spent: 450.00,
-    loyalty_points: 45,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  };
+  const { data, error } = await supabase
+    .from('customers')
+    .select('*')
+    .eq('id', userId)
+    .single();
+
+  if (error) {
+    console.error('Error fetching customer data:', error);
+    return null;
+  }
+
+  return data;
 };
 
 export const getOrCreateCustomerData = async (user: any): Promise<Customer | null> => {
-  console.log('Mock getOrCreateCustomerData called:', user?.email);
-  return await getCustomerData(user.id);
+  if (!user) return null;
+
+  console.log('Getting or creating customer data for:', user.email);
+  
+  // First try to get existing customer
+  let customer = await getCustomerData(user.id);
+  
+  if (!customer) {
+    // Create new customer record
+    console.log('Creating new customer record for:', user.email);
+    
+    const customerData = {
+      id: user.id,
+      email: user.email,
+      first_name: user.user_metadata?.first_name || 'User',
+      last_name: user.user_metadata?.last_name || '',
+      phone: user.user_metadata?.phone || null,
+    };
+
+    const { data, error } = await supabase
+      .from('customers')
+      .insert(customerData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating customer:', error);
+      return null;
+    }
+
+    customer = data;
+  }
+
+  return customer;
 };
 
 export const getCustomerAppointments = async (customerId: string): Promise<Appointment[]> => {
-  console.log('Mock getCustomerAppointments called:', customerId);
+  console.log('Fetching appointments for customer:', customerId);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return [
-    {
-      id: 'apt-1',
-      customer_id: customerId,
-      service_name: 'Wig Install + Styling',
-      appointment_date: '2025-01-20',
-      appointment_time: '14:00',
-      status: 'confirmed',
-      price: 80.00,
-      duration: '3-4 hours',
-      notes: 'Bring wig for installation - Body Wave 22"',
-      created_at: '2024-01-01T00:00:00Z'
-    }
-  ];
+  const { data, error } = await supabase
+    .from('appointments')
+    .select('*')
+    .eq('customer_id', customerId)
+    .order('appointment_date', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching appointments:', error);
+    return [];
+  }
+
+  return data || [];
 };
 
 export const getCustomerOrders = async (customerId: string): Promise<Order[]> => {
-  console.log('Mock getCustomerOrders called:', customerId);
+  console.log('Fetching orders for customer:', customerId);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return [
-    {
-      id: 'order-1',
-      customer_id: customerId,
-      order_number: 'ORD-000001',
-      order_date: '2024-12-10T00:00:00Z',
-      total_amount: 383.00,
-      status: 'delivered',
-      tracking_number: 'TRK123456789',
-      created_at: '2024-12-10T00:00:00Z',
-      order_items: [
-        {
-          id: 'item-1',
-          order_id: 'order-1',
-          product_name: '13x6 HD Lace Body Wave Wig',
-          product_length: '22"',
-          price: 328.00,
-          quantity: 1
-        }
-      ]
-    }
-  ];
+  const { data, error } = await supabase
+    .from('orders')
+    .select(`
+      *,
+      order_items (*)
+    `)
+    .eq('customer_id', customerId)
+    .order('order_date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching orders:', error);
+    return [];
+  }
+
+  return data || [];
 };
 
 export const getCustomerWishlist = async (customerId: string): Promise<WishlistItem[]> => {
-  console.log('Mock getCustomerWishlist called:', customerId);
+  console.log('Fetching wishlist for customer:', customerId);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return [
-    {
-      id: 'wish-1',
-      customer_id: customerId,
-      product_name: '13x6 HD Lace Deep Wave Wig',
-      product_length: '26"',
-      price: 383.00,
-      image_url: 'https://eminenceextensions.com/old/wp-content/uploads/2025/05/ca7ef7cb-f5f7-4f21-be43-bd3b9c7725e9.jpg',
-      in_stock: true,
-      created_at: '2024-01-01T00:00:00Z'
-    }
-  ];
+  const { data, error } = await supabase
+    .from('wishlist_items')
+    .select('*')
+    .eq('customer_id', customerId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching wishlist:', error);
+    return [];
+  }
+
+  return data || [];
 };
 
-// Mock booking functions
+// Booking functions
 export const createAppointment = async (appointmentData: Omit<Appointment, 'id' | 'created_at'>) => {
-  console.log('Mock createAppointment called:', appointmentData);
+  console.log('Creating new appointment:', appointmentData);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  return {
-    id: 'new-apt-' + Date.now(),
-    ...appointmentData,
-    created_at: new Date().toISOString()
-  };
+  const { data, error } = await supabase
+    .from('appointments')
+    .insert(appointmentData)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating appointment:', error);
+    throw error;
+  }
+
+  return data;
 };
 
-// Mock wishlist functions
+// Wishlist functions
 export const addToWishlist = async (wishlistData: Omit<WishlistItem, 'id' | 'created_at'>) => {
-  console.log('Mock addToWishlist called:', wishlistData);
+  console.log('Adding to wishlist:', wishlistData);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return {
-    id: 'new-wish-' + Date.now(),
-    ...wishlistData,
-    created_at: new Date().toISOString()
-  };
+  const { data, error } = await supabase
+    .from('wishlist_items')
+    .insert(wishlistData)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error adding to wishlist:', error);
+    throw error;
+  }
+
+  return data;
 };
 
 export const removeFromWishlist = async (itemId: string) => {
-  console.log('Mock removeFromWishlist called:', itemId);
+  console.log('Removing from wishlist:', itemId);
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
+  const { error } = await supabase
+    .from('wishlist_items')
+    .delete()
+    .eq('id', itemId);
+
+  if (error) {
+    console.error('Error removing from wishlist:', error);
+    throw error;
+  }
 };
 
-// Mock update customer profile
+// Update customer profile
 export const updateCustomerProfile = async (customerId: string, updates: Partial<Customer>) => {
-  console.log('Mock updateCustomerProfile called:', { customerId, updates });
+  console.log('Updating customer profile:', { customerId, updates });
   
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 500));
+  const { data, error } = await supabase
+    .from('customers')
+    .update({
+      ...updates,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', customerId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating customer profile:', error);
+    throw error;
+  }
+
+  return data;
+};
+
+// Password reset
+export const resetPassword = async (email: string) => {
+  console.log('Sending password reset email to:', email);
   
-  return {
-    id: customerId,
-    email: 'demo@example.com',
-    first_name: 'Demo',
-    last_name: 'User',
-    phone: '(204) 825-8526',
-    member_since: '2024-01-01T00:00:00Z',
-    total_orders: 5,
-    total_spent: 450.00,
-    loyalty_points: 45,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: new Date().toISOString(),
-    ...updates
-  };
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+
+  if (error) {
+    console.error('Error sending password reset:', error);
+    throw error;
+  }
+};
+
+// Update password
+export const updatePassword = async (newPassword: string) => {
+  console.log('Updating user password');
+  
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword
+  });
+
+  if (error) {
+    console.error('Error updating password:', error);
+    throw error;
+  }
 };
