@@ -24,6 +24,43 @@ try {
   throw new Error('Invalid Supabase URL format');
 }
 
+// Network connectivity test
+const testNetworkConnectivity = async () => {
+  try {
+    console.log('🔍 Testing network connectivity to Supabase...');
+    
+    // Try a simple fetch to the Supabase URL
+    const response = await fetch(`${supabaseUrl}/rest/v1/`, {
+      method: 'HEAD',
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${supabaseAnonKey}`
+      }
+    });
+    
+    if (response.ok) {
+      console.log('✅ Network connectivity to Supabase is working');
+      return true;
+    } else {
+      console.warn('⚠️ Supabase responded but with status:', response.status);
+      return false;
+    }
+  } catch (error: any) {
+    console.error('❌ Network connectivity test failed:', error.message);
+    
+    if (error.message.includes('ERR_NAME_NOT_RESOLVED')) {
+      console.error('🌐 DNS Resolution failed - this might be a network/firewall issue');
+      console.error('💡 Try accessing your Supabase dashboard directly in a new tab to test connectivity');
+    } else if (error.message.includes('ERR_NETWORK_CHANGED')) {
+      console.error('🔄 Network connection changed - try refreshing the page');
+    } else if (error.message.includes('Failed to fetch')) {
+      console.error('🚫 Network request blocked - this might be a CORS or firewall issue');
+    }
+    
+    return false;
+  }
+};
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
@@ -37,18 +74,52 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 });
 
-// Test connection immediately
-supabase.from('customers').select('count', { count: 'exact', head: true })
-  .then(({ error, count }) => {
+// Test connection with better error handling
+const testSupabaseConnection = async () => {
+  try {
+    console.log('🔍 Testing Supabase connection...');
+    
+    // First test basic network connectivity
+    const networkOk = await testNetworkConnectivity();
+    if (!networkOk) {
+      console.error('❌ Network connectivity test failed - skipping Supabase test');
+      return;
+    }
+    
+    // Test Supabase API
+    const { error, count } = await supabase
+      .from('customers')
+      .select('count', { count: 'exact', head: true });
+    
     if (error) {
-      console.error('❌ Supabase connection test failed:', error);
+      console.error('❌ Supabase API test failed:', error);
+      
+      if (error.message.includes('relation "customers" does not exist')) {
+        console.error('📋 Database tables not created yet - run migrations first');
+      } else if (error.message.includes('JWT')) {
+        console.error('🔑 Authentication token issue - check your API key');
+      } else if (error.message.includes('permission denied')) {
+        console.error('🔒 Permission denied - check RLS policies');
+      }
     } else {
       console.log('✅ Supabase connected successfully! Customer count:', count);
     }
-  })
-  .catch((error) => {
+  } catch (error: any) {
     console.error('❌ Supabase connection error:', error);
-  });
+    
+    if (error.message?.includes('fetch')) {
+      console.error('🌐 This appears to be a network connectivity issue');
+      console.error('💡 Possible solutions:');
+      console.error('   1. Check your internet connection');
+      console.error('   2. Try refreshing the page');
+      console.error('   3. Check if your firewall is blocking the request');
+      console.error('   4. Try accessing your Supabase dashboard directly');
+    }
+  }
+};
+
+// Run connection test after a short delay to allow the app to load
+setTimeout(testSupabaseConnection, 2000);
 
 // Database types
 export interface Customer {
@@ -163,7 +234,7 @@ export const signUp = async (email: string, password: string, userData: {
     return data;
   } catch (error: any) {
     console.error('❌ SignUp failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -188,7 +259,7 @@ export const signIn = async (email: string, password: string) => {
     return data;
   } catch (error: any) {
     console.error('❌ SignIn failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -206,7 +277,7 @@ export const signOut = async () => {
     console.log('✅ User signed out successfully');
   } catch (error: any) {
     console.error('❌ SignOut failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -386,7 +457,7 @@ export const createAppointment = async (appointmentData: Omit<Appointment, 'id' 
     return data;
   } catch (error: any) {
     console.error('❌ CreateAppointment failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -413,7 +484,7 @@ export const addToWishlist = async (wishlistData: Omit<WishlistItem, 'id' | 'cre
     return data;
   } catch (error: any) {
     console.error('❌ AddToWishlist failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -437,7 +508,7 @@ export const removeFromWishlist = async (itemId: string) => {
     console.log('✅ Item removed from wishlist successfully');
   } catch (error: any) {
     console.error('❌ RemoveFromWishlist failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -468,7 +539,7 @@ export const updateCustomerProfile = async (customerId: string, updates: Partial
     return data;
   } catch (error: any) {
     console.error('❌ UpdateCustomerProfile failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -492,7 +563,7 @@ export const resetPassword = async (email: string) => {
     console.log('✅ Password reset email sent successfully');
   } catch (error: any) {
     console.error('❌ ResetPassword failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
@@ -516,7 +587,7 @@ export const updatePassword = async (newPassword: string) => {
     console.log('✅ Password updated successfully');
   } catch (error: any) {
     console.error('❌ UpdatePassword failed:', error);
-    if (error.message?.includes('fetch')) {
+    if (error.message?.includes('fetch') || error.message?.includes('ERR_NAME_NOT_RESOLVED')) {
       throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
     }
     throw error;
