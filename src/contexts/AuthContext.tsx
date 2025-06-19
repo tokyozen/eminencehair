@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { supabase, getCurrentUser, Customer, getCustomerData } from '../lib/supabase';
+import { supabase, getCurrentUser, Customer, getOrCreateCustomerData } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -28,10 +28,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const refreshCustomerData = async () => {
     if (user) {
       try {
-        const customerData = await getCustomerData(user.id);
+        const customerData = await getOrCreateCustomerData(user);
         setCustomer(customerData);
+        console.log('Customer data refreshed:', customerData);
       } catch (error) {
-        console.error('Error fetching customer data:', error);
+        console.error('Error refreshing customer data:', error);
+        setCustomer(null);
       }
     }
   };
@@ -40,11 +42,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Get initial session
     const getInitialSession = async () => {
       try {
+        setLoading(true);
         const currentUser = await getCurrentUser();
+        console.log('Initial user check:', currentUser?.email);
+        
         setUser(currentUser);
         
         if (currentUser) {
-          await refreshCustomerData();
+          const customerData = await getOrCreateCustomerData(currentUser);
+          console.log('Initial customer data:', customerData);
+          setCustomer(customerData);
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
@@ -58,10 +65,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
+        
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await refreshCustomerData();
+          try {
+            const customerData = await getOrCreateCustomerData(session.user);
+            setCustomer(customerData);
+            console.log('Customer data loaded after auth change:', customerData);
+          } catch (error) {
+            console.error('Error loading customer data:', error);
+            setCustomer(null);
+          }
         } else {
           setCustomer(null);
         }

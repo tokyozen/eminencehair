@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Phone, Calendar, Package, Heart, Star } from 'lucide-react';
 import { signIn, signUp } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,15 +17,26 @@ const Login = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { user, customer, loading: authLoading } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (!authLoading && user && customer) {
+      console.log('User already logged in, redirecting to dashboard');
+      navigate('/dashboard');
+    }
+  }, [user, customer, authLoading, navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Clear error when user starts typing
+    // Clear messages when user starts typing
     if (error) setError(null);
+    if (success) setSuccess(null);
   };
 
   const validateForm = () => {
@@ -60,20 +72,37 @@ const Login = () => {
     
     setIsLoading(true);
     setError(null);
+    setSuccess(null);
     
     try {
       if (isLogin) {
         // Sign in existing user
-        await signIn(formData.email, formData.password);
-        navigate('/dashboard');
+        console.log('Attempting to sign in user:', formData.email);
+        const { user: signedInUser } = await signIn(formData.email, formData.password);
+        console.log('User signed in successfully:', signedInUser?.email);
+        
+        setSuccess('Successfully signed in! Redirecting...');
+        
+        // Wait for auth context to update, then redirect
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1500);
       } else {
         // Create new account
-        await signUp(formData.email, formData.password, {
+        console.log('Attempting to create new user:', formData.email);
+        const { user: newUser } = await signUp(formData.email, formData.password, {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phone: formData.phone
         });
-        navigate('/dashboard');
+        console.log('User created successfully:', newUser?.email);
+        
+        setSuccess('Account created successfully! Redirecting...');
+        
+        // Wait for auth context to update, then redirect
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 1500);
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
@@ -105,6 +134,18 @@ const Login = () => {
       description: "Get early access to sales and member-only discounts"
     }
   ];
+
+  // Show loading while checking auth state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-soft-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-muted-coral border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-warm-beige">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-soft-black">
@@ -141,6 +182,7 @@ const Login = () => {
                     onClick={() => {
                       setIsLogin(true);
                       setError(null);
+                      setSuccess(null);
                     }}
                     className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-300 ${
                       isLogin 
@@ -154,6 +196,7 @@ const Login = () => {
                     onClick={() => {
                       setIsLogin(false);
                       setError(null);
+                      setSuccess(null);
                     }}
                     className={`flex-1 py-2 px-4 rounded-md font-medium transition-all duration-300 ${
                       !isLogin 
@@ -169,6 +212,12 @@ const Login = () => {
               {error && (
                 <div className="mb-6 p-4 bg-red-600 bg-opacity-20 border border-red-500 border-opacity-50 rounded-lg">
                   <p className="text-red-400 text-sm">{error}</p>
+                </div>
+              )}
+
+              {success && (
+                <div className="mb-6 p-4 bg-green-600 bg-opacity-20 border border-green-500 border-opacity-50 rounded-lg">
+                  <p className="text-green-400 text-sm">{success}</p>
                 </div>
               )}
 

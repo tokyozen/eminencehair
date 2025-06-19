@@ -42,29 +42,73 @@ const Dashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hasRedirected, setHasRedirected] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate('/login');
+    console.log('Dashboard useEffect - Auth state:', { 
+      authLoading, 
+      user: user?.email, 
+      customer: customer?.email,
+      hasRedirected 
+    });
+
+    // Don't do anything while auth is still loading
+    if (authLoading) {
+      console.log('Auth still loading, waiting...');
       return;
     }
 
+    // If no user and we haven't redirected yet, redirect to login
+    if (!user && !hasRedirected) {
+      console.log('No user found, redirecting to login');
+      setHasRedirected(true);
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    // If we have a user but no customer data, wait a bit more
+    if (user && !customer) {
+      console.log('User exists but no customer data, waiting...');
+      // Set a timeout to prevent infinite waiting
+      const timeout = setTimeout(() => {
+        if (!customer) {
+          console.log('Customer data timeout, redirecting to login');
+          navigate('/login', { replace: true });
+        }
+      }, 5000);
+      
+      return () => clearTimeout(timeout);
+    }
+
+    // If we have both user and customer, load dashboard data
     if (user && customer) {
+      console.log('Both user and customer available, loading dashboard data');
       loadDashboardData();
     }
-  }, [user, customer, authLoading, navigate]);
+  }, [user, customer, authLoading, navigate, hasRedirected]);
 
   const loadDashboardData = async () => {
-    if (!customer) return;
+    if (!customer) {
+      console.log('No customer data available for loading dashboard');
+      return;
+    }
     
     try {
       setLoading(true);
+      console.log('Loading dashboard data for customer:', customer.email);
+      
       const [appointmentsData, ordersData, wishlistData] = await Promise.all([
         getCustomerAppointments(customer.id),
         getCustomerOrders(customer.id),
         getCustomerWishlist(customer.id)
       ]);
+
+      console.log('Dashboard data loaded successfully:', {
+        appointments: appointmentsData.length,
+        orders: ordersData.length,
+        wishlist: wishlistData.length
+      });
 
       setAppointments(appointmentsData);
       setOrders(ordersData);
@@ -79,13 +123,26 @@ const Dashboard = () => {
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       console.error('Error signing out:', error);
     }
   };
 
-  if (authLoading || loading) {
+  // Show loading while auth is loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-soft-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-muted-coral border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-warm-beige">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while dashboard data is loading (only if we have customer)
+  if (customer && loading) {
     return (
       <div className="min-h-screen bg-soft-black flex items-center justify-center">
         <div className="text-center">
@@ -96,14 +153,40 @@ const Dashboard = () => {
     );
   }
 
+  // Show error if we have user but no customer data after loading
+  if (user && !customer && !authLoading) {
+    return (
+      <div className="min-h-screen bg-soft-black flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-warm-beige mb-2">Unable to Load Account Data</h2>
+          <p className="text-gray-300 mb-6">There was an issue loading your customer information.</p>
+          <div className="space-x-4">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn-primary"
+            >
+              Retry
+            </button>
+            <button 
+              onClick={() => navigate('/login', { replace: true })} 
+              className="btn-secondary"
+            >
+              Return to Login
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If we don't have customer data, show loading or redirect
   if (!customer) {
     return (
       <div className="min-h-screen bg-soft-black flex items-center justify-center">
         <div className="text-center">
-          <p className="text-warm-beige mb-4">Unable to load customer data</p>
-          <button onClick={() => navigate('/login')} className="btn-primary">
-            Return to Login
-          </button>
+          <div className="w-16 h-16 border-4 border-muted-coral border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-warm-beige">Loading...</p>
         </div>
       </div>
     );

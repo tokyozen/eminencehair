@@ -91,19 +91,22 @@ export const signUp = async (email: string, password: string, userData: {
 
   if (error) throw error;
 
-  // Create customer record
+  // Create customer record with the user's ID
   if (data.user) {
     const { error: customerError } = await supabase
       .from('customers')
       .insert({
         id: data.user.id,
-        email: data.user.email,
+        email: data.user.email!,
         first_name: userData.firstName,
         last_name: userData.lastName,
         phone: userData.phone,
       });
 
-    if (customerError) throw customerError;
+    if (customerError) {
+      console.error('Error creating customer record:', customerError);
+      throw customerError;
+    }
   }
 
   return data;
@@ -131,14 +134,57 @@ export const getCurrentUser = async () => {
 
 // Customer data functions
 export const getCustomerData = async (userId: string): Promise<Customer | null> => {
-  const { data, error } = await supabase
-    .from('customers')
-    .select('*')
-    .eq('id', userId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-  if (error) throw error;
-  return data;
+    if (error) {
+      console.error('Error fetching customer data:', error);
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error in getCustomerData:', error);
+    return null;
+  }
+};
+
+export const getOrCreateCustomerData = async (user: any): Promise<Customer | null> => {
+  try {
+    // First try to get existing customer data
+    let customerData = await getCustomerData(user.id);
+    
+    if (!customerData) {
+      // If no customer record exists, create one
+      const { data, error } = await supabase
+        .from('customers')
+        .insert({
+          id: user.id,
+          email: user.email,
+          first_name: user.user_metadata?.first_name || 'Customer',
+          last_name: user.user_metadata?.last_name || '',
+          phone: user.user_metadata?.phone || null,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating customer record:', error);
+        return null;
+      }
+      
+      customerData = data;
+    }
+    
+    return customerData;
+  } catch (error) {
+    console.error('Error in getOrCreateCustomerData:', error);
+    return null;
+  }
 };
 
 export const getCustomerAppointments = async (customerId: string): Promise<Appointment[]> => {
