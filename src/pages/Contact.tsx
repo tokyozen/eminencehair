@@ -1,8 +1,19 @@
-import React from 'react';
-import { MapPin, Phone, Mail, Clock, Instagram, MessageCircle } from 'lucide-react';
-import BookingForm from '../components/BookingForm';
+import React, { useState } from 'react';
+import { MapPin, Phone, Mail, Clock, Instagram, MessageCircle, CheckCircle, Loader } from 'lucide-react';
+import { sendContactEmail, sendEmailFallback, ContactEmailData } from '../lib/emailService';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
   const contactInfo = [
     {
       icon: <Phone className="w-6 h-6 text-muted-coral" />,
@@ -13,7 +24,7 @@ const Contact = () => {
     {
       icon: <Mail className="w-6 h-6 text-golden-yellow" />,
       title: "Email",
-      details: ["eihu335@gmail.com"],
+      details: ["ahussein@kallmania.com"],
       action: "Send email"
     },
     {
@@ -62,6 +73,59 @@ const Contact = () => {
       answer: "Yes! Reinstalls are $60 and available only for wigs originally installed by us. The wig must be in good condition for reinstallation."
     }
   ];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setSubmitError(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    // Prepare email data
+    const emailData: ContactEmailData = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+      message: formData.message
+    };
+
+    try {
+      // Try to send email automatically
+      const emailSent = await sendContactEmail(emailData);
+      
+      if (emailSent) {
+        setIsSubmitted(true);
+      } else {
+        // Fallback to mailto if automatic sending fails
+        sendEmailFallback(emailData, 'contact');
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      setSubmitError('There was an issue sending your message. Please try again or contact us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    // Reset form after 5 seconds
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    }, 5000);
+  };
 
   return (
     <div className="animate-fade-in">
@@ -157,11 +221,150 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Booking Form */}
-          <BookingForm 
-            title="Schedule Your Appointment"
-            subtitle="Fill out the form below and we'll get back to you within 24 hours to confirm your booking."
-          />
+          {/* Contact Form */}
+          <div className="mb-20">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="section-title">Send Us a Message</h2>
+              <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+                Have a question or want to schedule a consultation? Fill out the form below and we'll get back to you quickly.
+              </p>
+            </div>
+
+            {isSubmitted ? (
+              <div className="card max-w-2xl mx-auto animate-fade-in text-center bg-gradient-to-br from-green-600/10 to-muted-coral/10 border-2 border-green-500 border-opacity-30">
+                <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-warm-beige mb-4">Message Sent Successfully!</h3>
+                <p className="text-gray-300 mb-6">
+                  Your message has been automatically sent to our team. We'll get back to you within 24 hours.
+                </p>
+                <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-4 border border-golden-yellow border-opacity-30">
+                  <p className="text-golden-yellow text-sm">
+                    <strong>What's Next?</strong><br />
+                    • We'll review your message and respond promptly<br />
+                    • For urgent matters, please call us directly<br />
+                    • Check your email for our response
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="card max-w-2xl mx-auto animate-fade-in">
+                {submitError && (
+                  <div className="mb-6 p-4 bg-red-600 bg-opacity-20 border border-red-500 border-opacity-50 rounded-lg">
+                    <p className="text-red-400 text-sm">{submitError}</p>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-warm-beige">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className="input-field"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-2 text-warm-beige">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        className="input-field"
+                        placeholder="(204) 825-8526"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-warm-beige">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="input-field"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-warm-beige">
+                      Subject *
+                    </label>
+                    <select
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      required
+                      className="input-field"
+                    >
+                      <option value="">Select a subject</option>
+                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Appointment Booking">Appointment Booking</option>
+                      <option value="Service Questions">Service Questions</option>
+                      <option value="Pricing Information">Pricing Information</option>
+                      <option value="Custom Order">Custom Order</option>
+                      <option value="Complaint or Feedback">Complaint or Feedback</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2 text-warm-beige">
+                      Message *
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={6}
+                      className="input-field resize-none"
+                      placeholder="Tell us how we can help you..."
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader className="w-5 h-5 mr-2 animate-spin" />
+                        Sending Message...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
+                  </button>
+                </form>
+
+                <div className="mt-6 text-center">
+                  <p className="text-gray-400 text-sm">
+                    Prefer to call? Contact us directly at{' '}
+                    <a href="tel:+12048258526" className="text-muted-coral hover:text-burnt-orange font-medium">
+                      (204) 825-8526
+                    </a>
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Location & Final CTA with Background */}
           <div className="mt-20 relative overflow-hidden rounded-2xl">

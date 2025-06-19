@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, Clock, DollarSign, CheckCircle, Star, Heart, Crown, Plus, Minus, Phone, Mail, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, DollarSign, CheckCircle, Star, Heart, Crown, Plus, Minus, Phone, Mail, MessageCircle, Loader } from 'lucide-react';
+import { sendBookingEmail, sendEmailFallback, BookingEmailData } from '../lib/emailService';
 
 const BookNow = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -15,6 +16,8 @@ const BookNow = () => {
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const serviceCategories = [
     {
@@ -222,53 +225,51 @@ const BookNow = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    setSubmitError(null);
   };
 
-  const handleFinalSubmit = (e: React.FormEvent) => {
+  const handleFinalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
     
     const currentService = getCurrentService();
     const selectedAddOnsList = getSelectedAddOns();
     
-    // Create detailed booking summary
-    let serviceDetails = `Service: ${currentService?.name} - $${currentService?.price}\n`;
-    if (selectedAddOnsList.length > 0) {
-      serviceDetails += '\nAdd-ons:\n';
-      selectedAddOnsList.forEach(addon => {
-        serviceDetails += `• ${addon.name} - $${addon.price}\n`;
-      });
+    // Prepare email data
+    const emailData: BookingEmailData = {
+      customerName: formData.name,
+      customerEmail: formData.email,
+      customerPhone: formData.phone,
+      serviceName: currentService?.name || '',
+      servicePrice: `$${currentService?.price || 0}`,
+      addOns: selectedAddOnsList.length > 0 
+        ? selectedAddOnsList.map(addon => `${addon.name} ($${addon.price})`).join(', ')
+        : undefined,
+      totalPrice: `$${getTotalPrice()}`,
+      preferredDate: new Date(selectedDate).toLocaleDateString(),
+      preferredTime: selectedTime,
+      additionalNotes: formData.message,
+      bookingType: 'detailed'
+    };
+
+    try {
+      // Try to send email automatically
+      const emailSent = await sendBookingEmail(emailData);
+      
+      if (emailSent) {
+        setIsSubmitted(true);
+      } else {
+        // Fallback to mailto if automatic sending fails
+        sendEmailFallback(emailData, 'booking');
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Error submitting booking:', error);
+      setSubmitError('There was an issue sending your request. Please try again or contact us directly.');
+    } finally {
+      setIsSubmitting(false);
     }
-    serviceDetails += `\nTotal: $${getTotalPrice()}`;
-    
-    // Create mailto link with complete booking details
-    const subject = encodeURIComponent(`Appointment Booking Request - ${currentService?.name}`);
-    const body = encodeURIComponent(`
-Hello,
-
-I would like to book an appointment with the following details:
-
-CUSTOMER INFORMATION:
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-
-APPOINTMENT DETAILS:
-${serviceDetails}
-Preferred Date: ${new Date(selectedDate).toLocaleDateString()}
-Preferred Time: ${selectedTime}
-
-ADDITIONAL NOTES:
-${formData.message}
-
-Please confirm availability and provide any additional instructions.
-
-Thank you!
-    `);
-    
-    const mailtoLink = `mailto:ahussein@kallmania.com?subject=${subject}&body=${body}`;
-    window.open(mailtoLink, '_blank');
-    
-    setIsSubmitted(true);
   };
 
   if (isSubmitted) {
@@ -278,7 +279,7 @@ Thank you!
           <CheckCircle className="w-20 h-20 text-green-400 mx-auto mb-6" />
           <h1 className="text-3xl font-bold text-warm-beige mb-4">Booking Request Sent!</h1>
           <p className="text-lg text-gray-300 mb-6">
-            Your detailed appointment request has been sent via email. We'll review your request and get back to you within 24 hours to confirm your booking.
+            Your detailed appointment request has been automatically sent to our team. We'll review your request and get back to you within 24 hours to confirm your booking.
           </p>
           
           <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-6 border border-golden-yellow border-opacity-30 mb-6">
@@ -698,6 +699,12 @@ Thank you!
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* Contact Form */}
                 <div className="card">
+                  {submitError && (
+                    <div className="mb-6 p-4 bg-red-600 bg-opacity-20 border border-red-500 border-opacity-50 rounded-lg">
+                      <p className="text-red-400 text-sm">{submitError}</p>
+                    </div>
+                  )}
+
                   <form onSubmit={handleFinalSubmit} className="space-y-6">
                     <div>
                       <label className="block text-sm font-medium mb-2 text-warm-beige">
@@ -760,9 +767,17 @@ Thank you!
 
                     <button
                       type="submit"
-                      className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
+                      disabled={isSubmitting}
+                      className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                     >
-                      Send Booking Request
+                      {isSubmitting ? (
+                        <>
+                          <Loader className="w-5 h-5 mr-2 animate-spin" />
+                          Sending Request...
+                        </>
+                      ) : (
+                        'Send Booking Request'
+                      )}
                     </button>
                   </form>
                 </div>

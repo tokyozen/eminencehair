@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, User, Phone, Mail, CheckCircle } from 'lucide-react';
+import { Calendar, Clock, User, Phone, Mail, CheckCircle, Loader } from 'lucide-react';
+import { sendBookingEmail, sendEmailFallback, BookingEmailData } from '../lib/emailService';
 
 interface BookingFormProps {
   title?: string;
@@ -20,6 +21,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const services = [
     'Wig Install (No Styling) - $75',
@@ -34,35 +37,49 @@ const BookingForm: React.FC<BookingFormProps> = ({
     '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
     
-    // Create mailto link with form data
-    const subject = encodeURIComponent(`Appointment Request - ${formData.service}`);
-    const body = encodeURIComponent(`
-Hello,
-
-I would like to schedule an appointment with the following details:
-
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Service: ${formData.service}
-Preferred Date: ${formData.date}
-Preferred Time: ${formData.time}
-
-Additional Notes:
-${formData.message}
-
-Thank you!
-    `);
+    // Extract service name and price
+    const serviceParts = formData.service.split(' - ');
+    const serviceName = serviceParts[0];
+    const servicePrice = serviceParts[1] || 'Contact for pricing';
     
-    const mailtoLink = `mailto:ahussein@kallmania.com?subject=${subject}&body=${body}`;
-    window.open(mailtoLink, '_blank');
+    // Prepare email data
+    const emailData: BookingEmailData = {
+      customerName: formData.name,
+      customerEmail: formData.email,
+      customerPhone: formData.phone,
+      serviceName: serviceName,
+      servicePrice: servicePrice,
+      totalPrice: servicePrice,
+      preferredDate: new Date(formData.date).toLocaleDateString(),
+      preferredTime: formData.time,
+      additionalNotes: formData.message,
+      bookingType: 'simple'
+    };
+
+    try {
+      // Try to send email automatically
+      const emailSent = await sendBookingEmail(emailData);
+      
+      if (emailSent) {
+        setIsSubmitted(true);
+      } else {
+        // Fallback to mailto if automatic sending fails
+        sendEmailFallback(emailData, 'booking');
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Error submitting booking:', error);
+      setSubmitError('There was an issue sending your request. Please try again or contact us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
     
-    setIsSubmitted(true);
-    
-    // Reset form after 3 seconds
+    // Reset form after 5 seconds
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({
@@ -74,7 +91,7 @@ Thank you!
         time: '',
         message: ''
       });
-    }, 3000);
+    }, 5000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -82,6 +99,7 @@ Thank you!
       ...formData,
       [e.target.name]: e.target.value
     });
+    setSubmitError(null);
   };
 
   if (isSubmitted) {
@@ -93,7 +111,7 @@ Thank you!
               <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-warm-beige mb-4">Request Sent Successfully!</h2>
               <p className="text-gray-300 mb-6">
-                Your appointment request has been sent via email. We'll get back to you within 24 hours to confirm your booking.
+                Your appointment request has been automatically sent to our team. We'll get back to you within 24 hours to confirm your booking.
               </p>
               <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-4 border border-golden-yellow border-opacity-30">
                 <p className="text-golden-yellow text-sm">
@@ -121,6 +139,12 @@ Thank you!
         </div>
 
         <div className="card max-w-2xl mx-auto animate-fade-in">
+          {submitError && (
+            <div className="mb-6 p-4 bg-red-600 bg-opacity-20 border border-red-500 border-opacity-50 rounded-lg">
+              <p className="text-red-400 text-sm">{submitError}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               <div>
@@ -243,9 +267,17 @@ Thank you!
 
             <button
               type="submit"
-              className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4"
+              disabled={isSubmitting}
+              className="w-full btn-primary text-base sm:text-lg py-3 sm:py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Send Appointment Request
+              {isSubmitting ? (
+                <>
+                  <Loader className="w-5 h-5 mr-2 animate-spin" />
+                  Sending Request...
+                </>
+              ) : (
+                'Send Appointment Request'
+              )}
             </button>
           </form>
 
