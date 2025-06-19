@@ -31,7 +31,7 @@ import {
   Appointment,
   Order,
   WishlistItem
-} from '../lib/supabase';
+} from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -376,119 +376,6 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/* Upcoming Appointments */}
-      {upcomingAppointments.length > 0 && (
-        <div className="card">
-          <h3 className="text-xl font-semibold text-warm-beige mb-6 flex items-center">
-            <Clock className="w-5 h-5 text-muted-coral mr-2" />
-            Upcoming Appointments
-          </h3>
-          <div className="space-y-6">
-            {upcomingAppointments.map((appointment) => (
-              <div key={appointment.id} className="bg-gray-800 bg-opacity-50 rounded-lg p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-                  <div>
-                    <h4 className="text-lg font-semibold text-warm-beige mb-2">{appointment.service_name}</h4>
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-300">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(appointment.appointment_date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {appointment.appointment_time}
-                      </div>
-                      <div className="flex items-center">
-                        <CreditCard className="w-4 h-4 mr-1" />
-                        ${appointment.price}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 mt-4 lg:mt-0">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(appointment.status)}`}>
-                      {appointment.status}
-                    </span>
-                    <a 
-                      href="tel:+12048258526"
-                      className="btn-secondary text-sm py-2 px-4"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-1" />
-                      Contact
-                    </a>
-                  </div>
-                </div>
-                {appointment.notes && (
-                  <div className="bg-golden-yellow bg-opacity-10 rounded-lg p-3 border border-golden-yellow border-opacity-30">
-                    <p className="text-sm text-golden-yellow">
-                      <strong>Notes:</strong> {appointment.notes}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Past Appointments */}
-      {pastAppointments.length > 0 && (
-        <div className="card">
-          <h3 className="text-xl font-semibold text-warm-beige mb-6 flex items-center">
-            <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
-            Past Appointments
-          </h3>
-          <div className="space-y-6">
-            {pastAppointments.map((appointment) => (
-              <div key={appointment.id} className="bg-gray-800 bg-opacity-50 rounded-lg p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-                  <div>
-                    <h4 className="text-lg font-semibold text-warm-beige mb-2">{appointment.service_name}</h4>
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-300">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(appointment.appointment_date).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
-                        <CreditCard className="w-4 h-4 mr-1" />
-                        ${appointment.price}
-                      </div>
-                      {appointment.rating && (
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`w-4 h-4 ${i < appointment.rating! ? 'text-golden-yellow fill-current' : 'text-gray-600'}`} 
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 mt-4 lg:mt-0">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(appointment.status)}`}>
-                      {appointment.status}
-                    </span>
-                    <button 
-                      onClick={() => navigate('/book')}
-                      className="btn-primary text-sm py-2 px-4"
-                    >
-                      Book Again
-                    </button>
-                  </div>
-                </div>
-                {appointment.review && (
-                  <div className="bg-muted-coral bg-opacity-10 rounded-lg p-3 border border-muted-coral border-opacity-30">
-                    <p className="text-sm text-gray-300">
-                      <strong className="text-muted-coral">Your Review:</strong> {appointment.review}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {appointments.length === 0 && (
         <div className="card text-center py-12">
           <Calendar className="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-50" />
@@ -510,86 +397,9 @@ const Dashboard = () => {
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between">
         <h2 className="text-2xl font-bold text-warm-beige mb-4 sm:mb-0">Order History</h2>
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search orders..."
-              className="input-field pl-10 w-64"
-            />
-          </div>
-          <select 
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="input-field w-32"
-          >
-            <option value="all">All Status</option>
-            <option value="delivered">Delivered</option>
-            <option value="processing">Processing</option>
-            <option value="shipped">Shipped</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
       </div>
 
-      {orders.length > 0 ? (
-        <div className="space-y-6">
-          {orders.map((order) => (
-            <div key={order.id} className="card">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-warm-beige mb-2">Order {order.order_number}</h3>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-300">
-                    <div>Placed on {new Date(order.order_date).toLocaleDateString()}</div>
-                    <div className="flex items-center">
-                      <Package className="w-4 h-4 mr-1" />
-                      {order.order_items?.length || 0} item{(order.order_items?.length || 0) !== 1 ? 's' : ''}
-                    </div>
-                    <div className="font-semibold text-muted-coral">${order.total_amount}</div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3 mt-4 lg:mt-0">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                    {order.status}
-                  </span>
-                  <button className="btn-secondary text-sm py-2 px-4">
-                    <Eye className="w-4 h-4 mr-1" />
-                    View Details
-                  </button>
-                  <button className="btn-primary text-sm py-2 px-4">
-                    <Download className="w-4 h-4 mr-1" />
-                    Invoice
-                  </button>
-                </div>
-              </div>
-
-              {order.order_items && order.order_items.length > 0 && (
-                <div className="space-y-3">
-                  {order.order_items.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center bg-gray-800 bg-opacity-50 rounded-lg p-4">
-                      <div>
-                        <h4 className="font-medium text-warm-beige">{item.product_name}</h4>
-                        {item.product_length && <p className="text-sm text-gray-300">Length: {item.product_length}</p>}
-                        <p className="text-sm text-gray-300">Quantity: {item.quantity}</p>
-                      </div>
-                      <div className="text-muted-coral font-semibold">${item.price}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {order.tracking_number && (
-                <div className="mt-4 bg-golden-yellow bg-opacity-10 rounded-lg p-3 border border-golden-yellow border-opacity-30">
-                  <p className="text-sm text-golden-yellow">
-                    <strong>Tracking Number:</strong> {order.tracking_number}
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
+      {orders.length === 0 && (
         <div className="card text-center py-12">
           <Package className="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-50" />
           <h3 className="text-xl font-semibold text-warm-beige mb-2">No Orders Yet</h3>
@@ -613,48 +423,7 @@ const Dashboard = () => {
         <p className="text-gray-300">{wishlistItems.length} item{wishlistItems.length !== 1 ? 's' : ''} saved</p>
       </div>
 
-      {wishlistItems.length > 0 ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {wishlistItems.map((item) => (
-            <div key={item.id} className="card group hover:scale-105 transition-transform duration-300">
-              <div className="aspect-square overflow-hidden rounded-lg mb-4">
-                <img
-                  src={item.image_url || '/placeholder-wig.jpg'}
-                  alt={item.product_name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-warm-beige mb-2">{item.product_name}</h3>
-              {item.product_length && <p className="text-gray-300 mb-2">Length: {item.product_length}</p>}
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xl font-bold text-muted-coral">${item.price}</span>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                  item.in_stock 
-                    ? 'text-green-400 bg-green-400/20' 
-                    : 'text-red-400 bg-red-400/20'
-                }`}>
-                  {item.in_stock ? 'In Stock' : 'Out of Stock'}
-                </span>
-              </div>
-              <div className="flex space-x-2">
-                <button 
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all duration-300 ${
-                    item.in_stock 
-                      ? 'bg-muted-coral hover:bg-burnt-orange text-white' 
-                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  }`}
-                  disabled={!item.in_stock}
-                >
-                  {item.in_stock ? 'Add to Cart' : 'Notify When Available'}
-                </button>
-                <button className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
-                  <Heart className="w-5 h-5 text-red-400 fill-current" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
+      {wishlistItems.length === 0 && (
         <div className="card text-center py-12">
           <Heart className="w-16 h-16 mx-auto mb-4 text-gray-400 opacity-50" />
           <h3 className="text-xl font-semibold text-warm-beige mb-2">Your Wishlist is Empty</h3>
@@ -720,27 +489,6 @@ const Dashboard = () => {
               className="input-field"
               readOnly
             />
-          </div>
-        </div>
-      </div>
-
-      {/* Account Security */}
-      <div className="card">
-        <h3 className="text-xl font-semibold text-warm-beige mb-6">Account Security</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 rounded-lg">
-            <div>
-              <h4 className="font-medium text-warm-beige">Password</h4>
-              <p className="text-sm text-gray-300">Manage your account password</p>
-            </div>
-            <button className="btn-primary text-sm py-2 px-4">Change Password</button>
-          </div>
-          <div className="flex items-center justify-between p-4 bg-gray-800 bg-opacity-50 rounded-lg">
-            <div>
-              <h4 className="font-medium text-warm-beige">Two-Factor Authentication</h4>
-              <p className="text-sm text-gray-300">Add an extra layer of security</p>
-            </div>
-            <button className="btn-secondary text-sm py-2 px-4">Enable</button>
           </div>
         </div>
       </div>
