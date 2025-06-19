@@ -3,11 +3,52 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Debug logging to check if environment variables are loaded
+console.log('🔍 Supabase URL:', supabaseUrl);
+console.log('🔍 Supabase Key exists:', !!supabaseAnonKey);
+console.log('🔍 Supabase Key length:', supabaseAnonKey?.length);
+
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ Missing Supabase environment variables!');
+  console.error('VITE_SUPABASE_URL:', supabaseUrl);
+  console.error('VITE_SUPABASE_ANON_KEY exists:', !!supabaseAnonKey);
   throw new Error('Missing Supabase environment variables. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Test if URL is valid
+try {
+  new URL(supabaseUrl);
+  console.log('✅ Supabase URL is valid');
+} catch (error) {
+  console.error('❌ Invalid Supabase URL:', supabaseUrl);
+  throw new Error('Invalid Supabase URL format');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
+  }
+});
+
+// Test connection immediately
+supabase.from('customers').select('count', { count: 'exact', head: true })
+  .then(({ error, count }) => {
+    if (error) {
+      console.error('❌ Supabase connection test failed:', error);
+    } else {
+      console.log('✅ Supabase connected successfully! Customer count:', count);
+    }
+  })
+  .catch((error) => {
+    console.error('❌ Supabase connection error:', error);
+  });
 
 // Database types
 export interface Customer {
@@ -71,291 +112,413 @@ export interface WishlistItem {
   created_at: string;
 }
 
-// Authentication functions
+// Authentication functions with better error handling
 export const signUp = async (email: string, password: string, userData: {
   firstName: string;
   lastName: string;
   phone: string;
 }) => {
-  console.log('Creating new user account:', email);
+  console.log('🔄 Creating new user account:', email);
   
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        phone: userData.phone,
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          phone: userData.phone,
+        }
       }
-    }
-  });
+    });
 
-  if (error) {
-    console.error('Sign up error:', error);
+    if (error) {
+      console.error('❌ Sign up error:', error);
+      throw error;
+    }
+
+    console.log('✅ User created successfully:', data.user?.email);
+
+    // Create customer record
+    if (data.user) {
+      console.log('🔄 Creating customer record...');
+      const { error: customerError } = await supabase
+        .from('customers')
+        .insert({
+          id: data.user.id,
+          email: data.user.email!,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          phone: userData.phone,
+        });
+
+      if (customerError) {
+        console.error('❌ Error creating customer record:', customerError);
+        throw customerError;
+      }
+      console.log('✅ Customer record created successfully');
+    }
+
+    return data;
+  } catch (error: any) {
+    console.error('❌ SignUp failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
-
-  // Create customer record
-  if (data.user) {
-    const { error: customerError } = await supabase
-      .from('customers')
-      .insert({
-        id: data.user.id,
-        email: data.user.email!,
-        first_name: userData.firstName,
-        last_name: userData.lastName,
-        phone: userData.phone,
-      });
-
-    if (customerError) {
-      console.error('Error creating customer record:', customerError);
-      throw customerError;
-    }
-  }
-
-  return data;
 };
 
 export const signIn = async (email: string, password: string) => {
-  console.log('Signing in user:', email);
+  console.log('🔄 Signing in user:', email);
   
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-  if (error) {
-    console.error('Sign in error:', error);
+    if (error) {
+      console.error('❌ Sign in error:', error);
+      throw error;
+    }
+
+    console.log('✅ User signed in successfully:', data.user?.email);
+    return data;
+  } catch (error: any) {
+    console.error('❌ SignIn failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
-
-  return data;
 };
 
 export const signOut = async () => {
-  console.log('Signing out user');
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error('Sign out error:', error);
+  console.log('🔄 Signing out user');
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('❌ Sign out error:', error);
+      throw error;
+    }
+    console.log('✅ User signed out successfully');
+  } catch (error: any) {
+    console.error('❌ SignOut failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
 };
 
 export const getCurrentUser = async () => {
-  const { data: { user }, error } = await supabase.auth.getUser();
-  if (error) {
-    console.error('Get user error:', error);
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) {
+      console.error('❌ Get user error:', error);
+      return null;
+    }
+    return user;
+  } catch (error: any) {
+    console.error('❌ GetCurrentUser failed:', error);
     return null;
   }
-  return user;
 };
 
-// Customer data functions
+// Customer data functions with better error handling
 export const getCustomerData = async (userId: string): Promise<Customer | null> => {
-  console.log('Fetching customer data for user:', userId);
+  console.log('🔄 Fetching customer data for user:', userId);
   
-  const { data, error } = await supabase
-    .from('customers')
-    .select('*')
-    .eq('id', userId)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-  if (error) {
-    console.error('Error fetching customer data:', error);
+    if (error) {
+      console.error('❌ Error fetching customer data:', error);
+      return null;
+    }
+
+    console.log('✅ Customer data fetched successfully:', data?.email);
+    return data;
+  } catch (error: any) {
+    console.error('❌ GetCustomerData failed:', error);
     return null;
   }
-
-  return data;
 };
 
 export const getOrCreateCustomerData = async (user: any): Promise<Customer | null> => {
   if (!user) return null;
 
-  console.log('Getting or creating customer data for:', user.email);
+  console.log('🔄 Getting or creating customer data for:', user.email);
   
-  // First try to get existing customer
-  let customer = await getCustomerData(user.id);
-  
-  if (!customer) {
-    // Create new customer record
-    console.log('Creating new customer record for:', user.email);
+  try {
+    // First try to get existing customer
+    let customer = await getCustomerData(user.id);
     
-    const customerData = {
-      id: user.id,
-      email: user.email,
-      first_name: user.user_metadata?.first_name || 'User',
-      last_name: user.user_metadata?.last_name || '',
-      phone: user.user_metadata?.phone || null,
-    };
+    if (!customer) {
+      // Create new customer record
+      console.log('🔄 Creating new customer record for:', user.email);
+      
+      const customerData = {
+        id: user.id,
+        email: user.email,
+        first_name: user.user_metadata?.first_name || 'User',
+        last_name: user.user_metadata?.last_name || '',
+        phone: user.user_metadata?.phone || null,
+      };
 
-    const { data, error } = await supabase
-      .from('customers')
-      .insert(customerData)
-      .select()
-      .single();
+      const { data, error } = await supabase
+        .from('customers')
+        .insert(customerData)
+        .select()
+        .single();
 
-    if (error) {
-      console.error('Error creating customer:', error);
-      return null;
+      if (error) {
+        console.error('❌ Error creating customer:', error);
+        return null;
+      }
+
+      customer = data;
+      console.log('✅ Customer record created successfully:', customer?.email);
     }
 
-    customer = data;
+    return customer;
+  } catch (error: any) {
+    console.error('❌ GetOrCreateCustomerData failed:', error);
+    return null;
   }
-
-  return customer;
 };
 
 export const getCustomerAppointments = async (customerId: string): Promise<Appointment[]> => {
-  console.log('Fetching appointments for customer:', customerId);
+  console.log('🔄 Fetching appointments for customer:', customerId);
   
-  const { data, error } = await supabase
-    .from('appointments')
-    .select('*')
-    .eq('customer_id', customerId)
-    .order('appointment_date', { ascending: true });
+  try {
+    const { data, error } = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('customer_id', customerId)
+      .order('appointment_date', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching appointments:', error);
+    if (error) {
+      console.error('❌ Error fetching appointments:', error);
+      return [];
+    }
+
+    console.log('✅ Appointments fetched successfully:', data?.length || 0);
+    return data || [];
+  } catch (error: any) {
+    console.error('❌ GetCustomerAppointments failed:', error);
     return [];
   }
-
-  return data || [];
 };
 
 export const getCustomerOrders = async (customerId: string): Promise<Order[]> => {
-  console.log('Fetching orders for customer:', customerId);
+  console.log('🔄 Fetching orders for customer:', customerId);
   
-  const { data, error } = await supabase
-    .from('orders')
-    .select(`
-      *,
-      order_items (*)
-    `)
-    .eq('customer_id', customerId)
-    .order('order_date', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        order_items (*)
+      `)
+      .eq('customer_id', customerId)
+      .order('order_date', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching orders:', error);
+    if (error) {
+      console.error('❌ Error fetching orders:', error);
+      return [];
+    }
+
+    console.log('✅ Orders fetched successfully:', data?.length || 0);
+    return data || [];
+  } catch (error: any) {
+    console.error('❌ GetCustomerOrders failed:', error);
     return [];
   }
-
-  return data || [];
 };
 
 export const getCustomerWishlist = async (customerId: string): Promise<WishlistItem[]> => {
-  console.log('Fetching wishlist for customer:', customerId);
+  console.log('🔄 Fetching wishlist for customer:', customerId);
   
-  const { data, error } = await supabase
-    .from('wishlist_items')
-    .select('*')
-    .eq('customer_id', customerId)
-    .order('created_at', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('wishlist_items')
+      .select('*')
+      .eq('customer_id', customerId)
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    console.error('Error fetching wishlist:', error);
+    if (error) {
+      console.error('❌ Error fetching wishlist:', error);
+      return [];
+    }
+
+    console.log('✅ Wishlist fetched successfully:', data?.length || 0);
+    return data || [];
+  } catch (error: any) {
+    console.error('❌ GetCustomerWishlist failed:', error);
     return [];
   }
-
-  return data || [];
 };
 
 // Booking functions
 export const createAppointment = async (appointmentData: Omit<Appointment, 'id' | 'created_at'>) => {
-  console.log('Creating new appointment:', appointmentData);
+  console.log('🔄 Creating new appointment:', appointmentData);
   
-  const { data, error } = await supabase
-    .from('appointments')
-    .insert(appointmentData)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('appointments')
+      .insert(appointmentData)
+      .select()
+      .single();
 
-  if (error) {
-    console.error('Error creating appointment:', error);
+    if (error) {
+      console.error('❌ Error creating appointment:', error);
+      throw error;
+    }
+
+    console.log('✅ Appointment created successfully:', data?.id);
+    return data;
+  } catch (error: any) {
+    console.error('❌ CreateAppointment failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
-
-  return data;
 };
 
 // Wishlist functions
 export const addToWishlist = async (wishlistData: Omit<WishlistItem, 'id' | 'created_at'>) => {
-  console.log('Adding to wishlist:', wishlistData);
+  console.log('🔄 Adding to wishlist:', wishlistData);
   
-  const { data, error } = await supabase
-    .from('wishlist_items')
-    .insert(wishlistData)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('wishlist_items')
+      .insert(wishlistData)
+      .select()
+      .single();
 
-  if (error) {
-    console.error('Error adding to wishlist:', error);
+    if (error) {
+      console.error('❌ Error adding to wishlist:', error);
+      throw error;
+    }
+
+    console.log('✅ Item added to wishlist successfully:', data?.id);
+    return data;
+  } catch (error: any) {
+    console.error('❌ AddToWishlist failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
-
-  return data;
 };
 
 export const removeFromWishlist = async (itemId: string) => {
-  console.log('Removing from wishlist:', itemId);
+  console.log('🔄 Removing from wishlist:', itemId);
   
-  const { error } = await supabase
-    .from('wishlist_items')
-    .delete()
-    .eq('id', itemId);
+  try {
+    const { error } = await supabase
+      .from('wishlist_items')
+      .delete()
+      .eq('id', itemId);
 
-  if (error) {
-    console.error('Error removing from wishlist:', error);
+    if (error) {
+      console.error('❌ Error removing from wishlist:', error);
+      throw error;
+    }
+
+    console.log('✅ Item removed from wishlist successfully');
+  } catch (error: any) {
+    console.error('❌ RemoveFromWishlist failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
 };
 
 // Update customer profile
 export const updateCustomerProfile = async (customerId: string, updates: Partial<Customer>) => {
-  console.log('Updating customer profile:', { customerId, updates });
+  console.log('🔄 Updating customer profile:', { customerId, updates });
   
-  const { data, error } = await supabase
-    .from('customers')
-    .update({
-      ...updates,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', customerId)
-    .select()
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', customerId)
+      .select()
+      .single();
 
-  if (error) {
-    console.error('Error updating customer profile:', error);
+    if (error) {
+      console.error('❌ Error updating customer profile:', error);
+      throw error;
+    }
+
+    console.log('✅ Customer profile updated successfully');
+    return data;
+  } catch (error: any) {
+    console.error('❌ UpdateCustomerProfile failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
-
-  return data;
 };
 
 // Password reset
 export const resetPassword = async (email: string) => {
-  console.log('Sending password reset email to:', email);
+  console.log('🔄 Sending password reset email to:', email);
   
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
-  });
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
 
-  if (error) {
-    console.error('Error sending password reset:', error);
+    if (error) {
+      console.error('❌ Error sending password reset:', error);
+      throw error;
+    }
+
+    console.log('✅ Password reset email sent successfully');
+  } catch (error: any) {
+    console.error('❌ ResetPassword failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
 };
 
 // Update password
 export const updatePassword = async (newPassword: string) => {
-  console.log('Updating user password');
+  console.log('🔄 Updating user password');
   
-  const { error } = await supabase.auth.updateUser({
-    password: newPassword
-  });
+  try {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
 
-  if (error) {
-    console.error('Error updating password:', error);
+    if (error) {
+      console.error('❌ Error updating password:', error);
+      throw error;
+    }
+
+    console.log('✅ Password updated successfully');
+  } catch (error: any) {
+    console.error('❌ UpdatePassword failed:', error);
+    if (error.message?.includes('fetch')) {
+      throw new Error('Unable to connect to Supabase. Please check your internet connection and try again.');
+    }
     throw error;
   }
 };
