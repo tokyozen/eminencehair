@@ -265,7 +265,7 @@ Please confirm availability and provide any additional instructions.
 Thank you!
     `);
     
-    const mailtoLink = `mailto:eihu335@gmail.com?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:ahussein@kallmania.com?subject=${subject}&body=${body}`;
     window.open(mailtoLink, '_blank');
     
     setIsSubmitted(true);
@@ -441,7 +441,7 @@ Thank you!
                   >
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-3 sm:mb-4">
                       <div className="flex-1 mb-3 sm:mb-0">
-                        <h3 className="text-lg sm:text-xl font-semibold text-warm-beige mb-2 group-hover:text-muted-coral transition-colors">
+                        <h3 className="text-lg sm:text-xl font-semibold mb-2 text-warm-beige group-hover:text-muted-coral transition-colors">
                           {service.name}
                         </h3>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-sm text-gray-400 mb-3 space-y-1 sm:space-y-0">
@@ -834,7 +834,7 @@ Thank you!
             </a>
             
             <a 
-              href="mailto:eihu335@gmail.com"
+              href="mailto:ahussein@kallmania.com"
               className="flex items-center justify-center space-x-2 p-4 bg-gray-800 bg-opacity-50 rounded-lg hover:bg-golden-yellow hover:bg-opacity-20 transition-all duration-300"
             >
               <Mail className="w-5 h-5 text-golden-yellow" />

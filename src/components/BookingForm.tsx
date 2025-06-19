@@ -57,7 +57,7 @@ ${formData.message}
 Thank you!
     `);
     
-    const mailtoLink = `mailto:eihu335@gmail.com?subject=${subject}&body=${body}`;
+    const mailtoLink = `mailto:ahussein@kallmania.com?subject=${subject}&body=${body}`;
     window.open(mailtoLink, '_blank');
     
     setIsSubmitted(true);
