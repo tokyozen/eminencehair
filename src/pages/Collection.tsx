@@ -89,12 +89,12 @@ const Collection = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
-          <h1 className="section-title">Hair Collection</h1>
-          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg">
+          <h1 className="section-title text-shadow">Hair Collection</h1>
+          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg text-shadow">
             Discover our premium collection of 100% human hair wigs and bundles. 
             Each piece is carefully crafted for natural beauty and lasting quality.
           </p>
@@ -197,17 +197,17 @@ const Collection = () => {
           {/* Custom Order CTA with Background */}
           <div className="mt-16 relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-20"
+              className="absolute inset-0 bg-cover bg-center opacity-30"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
-              <h3 className="text-2xl font-bold mb-4 text-warm-beige">Need Something Custom?</h3>
-              <p className="text-gray-300 mb-6">
+              <h3 className="text-2xl font-bold mb-4 text-warm-beige text-shadow">Need Something Custom?</h3>
+              <p className="text-gray-300 mb-6 text-shadow">
                 Can't find exactly what you're looking for? We offer custom glueless wig units 
                 made specifically for you.
               </p>

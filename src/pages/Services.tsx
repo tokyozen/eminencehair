@@ -135,12 +135,12 @@ const Services = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
-          <h1 className="section-title">Services & Pricing</h1>
-          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg">
+          <h1 className="section-title text-shadow">Services & Pricing</h1>
+          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg text-shadow">
             Professional wig installation and customization services with transparent pricing. 
             All prices reflect our current soft launch rates.
           </p>
@@ -183,16 +183,16 @@ const Services = () => {
           {/* Additional Fees with Background */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-15"
+              className="absolute inset-0 bg-cover bg-center opacity-30"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 p-8">
-              <h2 className="text-3xl font-bold text-center mb-12 text-warm-beige">Additional Fees</h2>
+              <h2 className="text-3xl font-bold text-center mb-12 text-warm-beige text-shadow">Additional Fees</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {additionalFees.map((fee, index) => (
                   <div key={index} className="card bg-gray-800 bg-opacity-80 backdrop-blur-sm">
@@ -261,12 +261,12 @@ const Services = () => {
                 backgroundImage: 'url(https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm border-2 border-white border-opacity-10">
-              <h2 className="text-3xl font-bold mb-6 text-warm-beige drop-shadow-lg">Ready to Book Your Service?</h2>
-              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto drop-shadow-lg">
+              <h2 className="text-3xl font-bold mb-6 text-warm-beige drop-shadow-lg text-shadow">Ready to Book Your Service?</h2>
+              <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto drop-shadow-lg text-shadow">
                 Have questions about our services or want to schedule an appointment? 
                 Contact us today to discuss your hair transformation needs.
               </p>

@@ -319,14 +319,14 @@ const BookNow = () => {
             backgroundImage: 'url(https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
         </div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-warm-beige drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 text-warm-beige drop-shadow-lg text-shadow">
             Book Your Appointment
           </h1>
-          <p className="text-lg sm:text-xl text-warm-beige max-w-2xl mx-auto drop-shadow-lg">
+          <p className="text-lg sm:text-xl text-warm-beige max-w-2xl mx-auto drop-shadow-lg text-shadow">
             Select your service below and let's create your perfect look together
           </p>
         </div>
@@ -609,7 +609,7 @@ const BookNow = () => {
                     {generateCalendarDays().map((date, index) => {
                       const dateStr = formatDate(date);
                       const isCurrentMonth = date.getMonth() === new Date().getMonth();
-                      const isAvailable =  isDateAvailable(date);
+                      const isAvailable = isDateAvailable(date);
                       const isSelected = selectedDate === dateStr;
 
                       return (

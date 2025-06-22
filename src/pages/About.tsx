@@ -60,12 +60,12 @@ const About = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
-          <h1 className="section-title">About Eminence Hair Co.</h1>
-          <p className="text-xl text-warm-beige max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
+          <h1 className="section-title text-shadow">About Eminence Hair Co.</h1>
+          <p className="text-xl text-warm-beige max-w-3xl mx-auto leading-relaxed drop-shadow-lg text-shadow">
             We're passionate about helping you feel confident and beautiful with premium quality 
             wigs and professional customization services.
           </p>
@@ -82,7 +82,7 @@ const About = () => {
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 p-12">
@@ -90,23 +90,23 @@ const About = () => {
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4 mb-6">
                     <Quote className="w-8 h-8 text-muted-coral" />
-                    <h2 className="text-3xl md:text-4xl font-bold text-warm-beige">
+                    <h2 className="text-3xl md:text-4xl font-bold text-warm-beige text-shadow">
                       Meet Our Founder
                     </h2>
                   </div>
                   
-                  <blockquote className="text-xl text-gray-300 leading-relaxed italic border-l-4 border-muted-coral pl-6 mb-6">
+                  <blockquote className="text-xl text-gray-300 leading-relaxed italic border-l-4 border-muted-coral pl-6 mb-6 text-shadow">
                     "I started Eminence Hair Co. because I believe every woman deserves to feel beautiful and confident. 
                     Hair is more than just an accessory – it's an expression of who you are."
                   </blockquote>
                   
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-gray-300 text-lg leading-relaxed text-shadow">
                     What began as a passion for helping women feel their best has grown into a business built on 
                     quality, craftsmanship, and genuine care. I personally oversee every customization to ensure 
                     each wig meets our high standards.
                   </p>
                   
-                  <p className="text-gray-300 text-lg leading-relaxed">
+                  <p className="text-gray-300 text-lg leading-relaxed text-shadow">
                     When you choose Eminence Hair Co., you're not just getting a wig – you're getting a piece 
                     that's been crafted with love, attention to detail, and the goal of making you feel absolutely amazing.
                   </p>
@@ -170,12 +170,12 @@ const About = () => {
           {/* Stats Section with Background */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
+              className="absolute inset-0 bg-cover bg-center bg-fixed opacity-30"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 p-12">
@@ -212,39 +212,39 @@ const About = () => {
           {/* What Makes Us Different with Background */}
           <div className="relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-15"
+              className="absolute inset-0 bg-cover bg-center opacity-30"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 card bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
-              <h2 className="text-3xl font-bold text-center mb-8 text-warm-beige">What Makes Us Different?</h2>
+              <h2 className="text-3xl font-bold text-center mb-8 text-warm-beige text-shadow">What Makes Us Different?</h2>
               <div className="grid md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-xl font-semibold mb-4 text-muted-coral">100% Human Hair Quality</h3>
-                  <p className="text-gray-300 mb-6">
+                  <p className="text-gray-300 mb-6 text-shadow">
                     We use only premium 100% human hair in textures like Body Wave, Straight, and Exotic Curly. 
                     Our hair is carefully sourced to ensure it looks natural, feels soft, and lasts long.
                   </p>
                   
                   <h3 className="text-xl font-semibold mb-4 text-muted-coral">Expert Customization</h3>
-                  <p className="text-gray-300">
+                  <p className="text-gray-300 text-shadow">
                     Every wig goes through our professional customization process. We handle the bleaching, 
                     plucking, and styling so your wig is perfectly prepared and ready to install.
                   </p>
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold mb-4 text-golden-yellow">Professional Service</h3>
-                  <p className="text-gray-300 mb-6">
+                  <p className="text-gray-300 mb-6 text-shadow">
                     We maintain high standards with clear policies, proper scheduling, and professional 
                     installation services. Your satisfaction and hair health are our top priorities.
                   </p>
                   
                   <h3 className="text-xl font-semibold mb-4 text-golden-yellow">Ready-to-Wear Solution</h3>
-                  <p className="text-gray-300">
+                  <p className="text-gray-300 text-shadow">
                     Unlike other providers, our wigs come fully customized and styled. You get a 
                     complete hair transformation that's ready to make you look and feel amazing.
                   </p>

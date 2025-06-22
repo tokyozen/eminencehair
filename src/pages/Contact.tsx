@@ -137,12 +137,12 @@ const Contact = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
-          <h1 className="section-title">Get in Touch</h1>
-          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg">
+          <h1 className="section-title text-shadow">Get in Touch</h1>
+          <p className="text-xl text-warm-beige max-w-3xl mx-auto drop-shadow-lg text-shadow">
             Ready to transform your look? Contact us to schedule your appointment or ask any questions 
             about our services and products.
           </p>
@@ -172,16 +172,16 @@ const Contact = () => {
           {/* Business Hours with Background */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-15"
+              className="absolute inset-0 bg-cover bg-center opacity-30"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 p-8">
-              <h2 className="text-3xl font-bold text-center mb-12 text-warm-beige">Business Hours</h2>
+              <h2 className="text-3xl font-bold text-center mb-12 text-warm-beige text-shadow">Business Hours</h2>
               <div className="max-w-2xl mx-auto">
                 <div className="card bg-gray-800 bg-opacity-80 backdrop-blur-sm">
                   <div className="flex items-center justify-center mb-6">
@@ -369,19 +369,19 @@ const Contact = () => {
           {/* Location & Final CTA with Background */}
           <div className="mt-20 relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-20"
+              className="absolute inset-0 bg-cover bg-center opacity-30"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
             <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
               <div className="mb-6">
                 <MapPin className="w-8 h-8 text-muted-coral mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-4 text-warm-beige">Visit Our Studio</h3>
-                <p className="text-gray-300 mb-6">
+                <h3 className="text-2xl font-bold mb-4 text-warm-beige text-shadow">Visit Our Studio</h3>
+                <p className="text-gray-300 mb-6 text-shadow">
                   Located in a convenient, professional setting where you can relax and enjoy your hair transformation experience.
                 </p>
               </div>
@@ -401,7 +401,7 @@ const Contact = () => {
                 </div>
               </div>
 
-              <p className="text-xl text-gray-300 mb-6">
+              <p className="text-xl text-gray-300 mb-6 text-shadow">
                 Ready to experience the Eminence Hair difference?
               </p>
               <button className="btn-primary text-lg px-8 py-4">
