@@ -89,7 +89,7 @@ const Collection = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-75"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -197,12 +197,12 @@ const Collection = () => {
           {/* Custom Order CTA with Background */}
           <div className="mt-16 relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-30"
+              className="absolute inset-0 bg-cover bg-center opacity-20"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
             </div>
             
             <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">

@@ -319,7 +319,7 @@ const BookNow = () => {
             backgroundImage: 'url(https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
         </div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -609,7 +609,7 @@ const BookNow = () => {
                     {generateCalendarDays().map((date, index) => {
                       const dateStr = formatDate(date);
                       const isCurrentMonth = date.getMonth() === new Date().getMonth();
-                      const isAvailable = isDateAvailable(date);
+                      const isAvailable =  isDateAvailable(date);
                       const isSelected = selectedDate === dateStr;
 
                       return (

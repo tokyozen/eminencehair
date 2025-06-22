@@ -137,7 +137,7 @@ const Contact = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -172,7 +172,7 @@ const Contact = () => {
           {/* Business Hours with Background */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-20"
+              className="absolute inset-0 bg-cover bg-center opacity-15"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
@@ -369,12 +369,12 @@ const Contact = () => {
           {/* Location & Final CTA with Background */}
           <div className="mt-20 relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-30"
+              className="absolute inset-0 bg-cover bg-center opacity-20"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
             </div>
             
             <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">

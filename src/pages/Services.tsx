@@ -135,7 +135,7 @@ const Services = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -183,7 +183,7 @@ const Services = () => {
           {/* Additional Fees with Background */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-20"
+              className="absolute inset-0 bg-cover bg-center opacity-15"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
@@ -261,7 +261,7 @@ const Services = () => {
                 backgroundImage: 'url(https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-75"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
             </div>
             
             <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm border-2 border-white border-opacity-10">

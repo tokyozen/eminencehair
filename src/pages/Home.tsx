@@ -133,7 +133,7 @@ const Home = () => {
                 }}
               >
                 {/* Dark overlay for better text readability */}
-                <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
+                <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
               </div>
               
               {/* Gradient overlay for additional depth */}
@@ -334,7 +334,7 @@ const Home = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -470,7 +470,7 @@ const Home = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
@@ -505,7 +505,7 @@ const Home = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
         </div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">

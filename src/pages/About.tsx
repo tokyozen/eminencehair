@@ -60,7 +60,7 @@ const About = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-75"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center relative z-10">
@@ -82,7 +82,7 @@ const About = () => {
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
             </div>
             
             <div className="relative z-10 p-12">
@@ -170,12 +170,12 @@ const About = () => {
           {/* Stats Section with Background */}
           <div className="relative mb-20 overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center bg-fixed opacity-30"
+              className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-70"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
             </div>
             
             <div className="relative z-10 p-12">
@@ -212,12 +212,12 @@ const About = () => {
           {/* What Makes Us Different with Background */}
           <div className="relative overflow-hidden rounded-2xl">
             <div 
-              className="absolute inset-0 bg-cover bg-center opacity-20"
+              className="absolute inset-0 bg-cover bg-center opacity-15"
               style={{
                 backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
               }}
             >
-              <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+              <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
             </div>
             
             <div className="relative z-10 card bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
