@@ -205,7 +205,7 @@ const Collection = () => {
               <div className="absolute inset-0 bg-soft-black bg-opacity-50"></div>
             </div>
             
-            <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 backdrop-blur-sm">
+            <div className="relative z-10 card text-center bg-gradient-to-r from-muted-coral/10 to-golden-yellow/10 bg-soft-black bg-opacity-50">
               <h3 className="text-2xl font-bold mb-4 text-warm-beige text-shadow">Need Something Custom?</h3>
               <p className="text-gray-300 mb-6 text-shadow">
                 Can't find exactly what you're looking for? We offer custom glueless wig units 
