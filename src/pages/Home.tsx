@@ -133,7 +133,7 @@ const Home = () => {
                 }}
               >
                 {/* Dark overlay for better text readability */}
-                <div className="absolute inset-0 bg-soft-black bg-opacity-80"></div>
+                <div className="absolute inset-0 bg-soft-black bg-opacity-60"></div>
               </div>
               
               {/* Gradient overlay for additional depth */}
@@ -162,11 +162,11 @@ const Home = () => {
         {/* Slide Content */}
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="floating-animation">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-warm-beige animate-slide-up">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 text-warm-beige animate-slide-up text-shadow">
               {heroSlides[currentSlide].title}
             </h1>
           </div>
-          <p className="text-lg sm:text-xl md:text-2xl text-warm-beige mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up drop-shadow-lg">
+          <p className="text-lg sm:text-xl md:text-2xl text-warm-beige mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up drop-shadow-lg text-shadow">
             {heroSlides[currentSlide].subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-slide-up">
@@ -334,13 +334,13 @@ const Home = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider3-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-65"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className="section-title">Our Services</h2>
-            <p className="text-lg sm:text-xl text-warm-beige max-w-3xl mx-auto">
+            <h2 className="section-title text-shadow">Our Services</h2>
+            <p className="text-lg sm:text-xl text-warm-beige max-w-3xl mx-auto text-shadow">
               Professional wig installation and customization services designed to make you look and feel amazing
             </p>
           </div>
@@ -470,11 +470,11 @@ const Home = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-parallax-1.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-90"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-65"></div>
         </div>
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <h2 className="section-title">Why Choose Eminence Hair?</h2>
+          <h2 className="section-title text-shadow">Why Choose Eminence Hair?</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <div key={index} className="card text-center hover:scale-105 transition-transform duration-300 bg-gray-800 bg-opacity-70 backdrop-blur-sm">
@@ -505,14 +505,14 @@ const Home = () => {
             backgroundImage: 'url(https://eminenceextensions.com/old/wp-content/uploads/2025/05/h1-slider2-background-img.jpg)'
           }}
         >
-          <div className="absolute inset-0 bg-soft-black bg-opacity-85"></div>
+          <div className="absolute inset-0 bg-soft-black bg-opacity-65"></div>
         </div>
         
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-warm-beige drop-shadow-lg">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-warm-beige drop-shadow-lg text-shadow">
             Ready to Feel Confident and Cute?
           </h2>
-          <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 drop-shadow-lg">
+          <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 drop-shadow-lg text-shadow">
             Join hundreds of satisfied customers who trust Eminence Hair Co. for their hair transformation needs.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
