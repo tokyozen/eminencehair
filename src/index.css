@@ -20,7 +20,7 @@
   }
   
   .card {
-    @apply bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-xl border border-gray-700 hover:border-muted-coral transition-all duration-300;
+    @apply bg-gray-800 bg-opacity-50 rounded-xl p-4 sm:p-6 shadow-xl border border-gray-700 hover:border-muted-coral transition-all duration-300;
   }
   
   .input-field {
@@ -66,12 +66,27 @@
   100% { width: 100%; }
 }
 
+@keyframes pulseGlow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(174, 146, 112, 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(174, 146, 112, 0.6);
+    transform: scale(1.05);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out;
 }
 
 .animate-slide-up {
   animation: slideUp 0.6s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
 }
 
 /* Scroll to top button specific animations */
@@ -152,4 +167,36 @@
 
 .progress-bar {
   animation: progressBar 6s linear infinite;
+}
+
+/* Preloader specific animations */
+@keyframes preloaderFadeOut {
+  from { 
+    opacity: 1; 
+    visibility: visible;
+  }
+  to { 
+    opacity: 0; 
+    visibility: hidden;
+  }
+}
+
+.preloader-fade-out {
+  animation: preloaderFadeOut 0.8s ease-out forwards;
+}
+
+/* Enhanced pulse animation for preloader */
+@keyframes pulse-slow {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
 }
