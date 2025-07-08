@@ -28,7 +28,7 @@ const Collection = () => {
     },
     {
       id: 3,
-      name: "13x6 HD Lace Deep Wave Wig",
+      name: "HD Lace Deep Wave Wig",
       category: "curly",
       density: "180%",
       lengths: ["18\"", "20\"", "22\"", "24\"", "26\"", "28\"", "30\""],
