@@ -167,7 +167,12 @@ const Home = () => {
             </h1>
           </div>
           <p className="text-lg sm:text-xl md:text-2xl text-warm-beige mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-up drop-shadow-lg text-shadow">
-            {heroSlides[currentSlide].subtitle}
+            {heroSlides[currentSlide].subtitle.split('\n\n').map((line, index) => (
+              <span key={index}>
+                {line}
+                {index < heroSlides[currentSlide].subtitle.split('\n\n').length - 1 && <><br /><br /></>}
+              </span>
+            ))}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-slide-up">
             <Link 
