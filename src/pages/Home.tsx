@@ -12,8 +12,8 @@ const Home = () => {
     {
       id: 1,
       image: 'https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg',
-      title: 'Eminence Hair Co.',
-      subtitle: 'High-quality wigs and bundles that look natural and feel soft. Transform your look with our premium human hair and expert customization.',
+      title: 'Luxury Hair Flawless Installs',
+      subtitle: 'At Eminence, we are all about enhancing what is already there. Whether its through our premium bundles, custom wigs or installs, the goal is to help you feel beautiful and confident in your own way.',
       primaryCTA: 'Shop Collection',
       secondaryCTA: 'Book Appointment',
       primaryLink: '/collection',
