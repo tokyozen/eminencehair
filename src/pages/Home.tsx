@@ -13,7 +13,7 @@ const Home = () => {
       id: 1,
       image: 'https://kindredhairandskin.com/wp-content/uploads/2021/07/AdobeStock_269144933.jpeg',
       title: 'Luxury Hair Flawless Installs',
-      subtitle: 'At Eminence, we are all about enhancing what is already there. Whether its through our premium bundles, custom wigs or installs, the goal is to help you feel beautiful and confident in your own way.', 
+      subtitle: 'At Eminence, we are all about enhancing what is already there. Whether its through our premium bundles, custom wigs or installs, the goal is to help you feel beautiful and confident in your own way. <br/> Your Crown, Your Beauty, Your Moment', 
       primaryCTA: 'Shop Collection',
       secondaryCTA: 'Book Appointment',
       primaryLink: '/collection',
