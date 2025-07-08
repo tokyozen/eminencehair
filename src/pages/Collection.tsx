@@ -38,7 +38,7 @@ const Collection = () => {
     },
     {
       id: 4,
-      name: "13x6 HD Lace Body Wave Wig",
+      name: "13x6 HD Lace Deep Wave",
       category: "body-wave",
       density: "200%",
       lengths: ["32\"", "34\"", "36\"", "38\"", "40\""],
@@ -48,7 +48,7 @@ const Collection = () => {
     },
     {
       id: 5,
-      name: "13x4 HD Lace Wig",
+      name: "13x4 HD Lace Body Wave",
       category: "straight",
       density: "180%",
       lengths: ["20\"", "24\"", "26\"", "28\"", "30\""],
@@ -58,7 +58,7 @@ const Collection = () => {
     },
     {
       id: 6,
-      name: "13x6 HD Lace Deep Wave Wig",
+      name: "13x6 HD Straight",
       category: "curly",
       density: "200%",
       lengths: ["18\"", "20\"", "22\"", "24\"", "26\"", "28\"", "30\"", "32\"", "34\"", "36\"", "38\"", "40\""],
